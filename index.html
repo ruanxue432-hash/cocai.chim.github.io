@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web trung gian - Quản trị</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
             background: #0b0b1a;
@@ -23,21 +19,15 @@
         .container {
             max-width: 950px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255,255,255,0.06);
             border-radius: 20px;
             padding: 30px;
             backdrop-filter: blur(10px);
         }
-        h1 {
-            color: #ff0050;
-            margin-bottom: 8px;
-        }
-        .sub {
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 20px;
-        }
+        h1 { color: #ff0050; margin-bottom: 8px; }
+        .sub { color: rgba(255,255,255,0.4); margin-bottom: 20px; }
         .status-bar {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.05);
             padding: 12px 18px;
             border-radius: 12px;
             display: flex;
@@ -55,65 +45,35 @@
             color: #fff;
             transition: 0.3s;
         }
-        .btn-primary {
-            background: #ff0050;
-        }
-        .btn-primary:hover {
-            opacity: 0.8;
-        }
-        .btn-success {
-            background: #00c851;
-        }
-        .btn-success:hover {
-            opacity: 0.8;
-        }
-        .btn-danger {
-            background: #ff4444;
-        }
-        .btn-danger:hover {
-            opacity: 0.8;
-        }
-        .btn-outline {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .btn-sm {
-            padding: 4px 12px;
-            font-size: 12px;
-        }
-        input,
-        textarea,
-        select {
+        .btn-primary { background: #ff0050; }
+        .btn-primary:hover { opacity: 0.8; }
+        .btn-success { background: #00c851; }
+        .btn-success:hover { opacity: 0.8; }
+        .btn-danger { background: #ff4444; }
+        .btn-danger:hover { opacity: 0.8; }
+        .btn-outline { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
+        .btn-outline:hover { background: rgba(255,255,255,0.2); }
+        .btn-sm { padding: 4px 12px; font-size: 12px; }
+        input, textarea, select {
             width: 100%;
             padding: 12px 16px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.05);
             color: #fff;
             font-size: 15px;
             outline: none;
             margin-bottom: 10px;
         }
-        input:focus,
-        textarea:focus,
-        select:focus {
-            border-color: #ff0050;
-        }
-        select option {
-            background: #1a1a2e;
-        }
-        .hidden {
-            display: none !important;
-        }
+        input:focus, textarea:focus, select:focus { border-color: #ff0050; }
+        select option { background: #1a1a2e; }
+        .hidden { display: none !important; }
         .toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0,0,0,0.85);
             color: #fff;
             padding: 12px 28px;
             border-radius: 40px;
@@ -123,134 +83,78 @@
             transition: 0.3s;
             pointer-events: none;
         }
-        .toast.show {
-            opacity: 1;
-        }
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
+        .toast.show { opacity: 1; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
         .tab {
             padding: 8px 18px;
             border-radius: 30px;
             background: transparent;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255,255,255,0.5);
             border: none;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
         }
-        .tab.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .user-table th,
-        .user-table td {
+        .tab.active { background: rgba(255,255,255,0.08); color: #fff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .user-table { width: 100%; border-collapse: collapse; }
+        .user-table th, .user-table td {
             padding: 10px 14px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
-        .user-table th {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 13px;
-        }
+        .user-table th { color: rgba(255,255,255,0.4); font-size: 13px; }
         .role-badge {
             padding: 2px 14px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
         }
-        .role-badge.admin {
-            background: #f5576c;
-            color: #fff;
-        }
-        .role-badge.user {
-            background: rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.6);
-        }
+        .role-badge.admin { background: #f5576c; color: #fff; }
+        .role-badge.user { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.6); }
         .message-item {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255,255,255,0.04);
             border-radius: 12px;
             padding: 12px 16px;
             margin-bottom: 10px;
             border-left: 3px solid transparent;
         }
-        .message-item.unread {
-            border-left-color: #ff0050;
-            background: rgba(255, 0, 80, 0.06);
-        }
+        .message-item.unread { border-left-color: #ff0050; background: rgba(255,0,80,0.06); }
         .message-item .msg-header {
             display: flex;
             justify-content: space-between;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255,255,255,0.5);
             font-size: 13px;
             margin-bottom: 4px;
         }
-        .message-item .msg-content {
-            color: #fff;
-        }
-        .actions-cell {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
+        .message-item .msg-content { color: #fff; }
+        .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
         .footer-actions {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             margin-top: 20px;
             padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            border-top: 1px solid rgba(255,255,255,0.06);
         }
-        .auth-box {
-            max-width: 400px;
-            margin: 40px auto;
-        }
-        .auth-box input {
-            margin-bottom: 12px;
-        }
+        .auth-box { max-width: 400px; margin: 40px auto; }
+        .auth-box input { margin-bottom: 12px; }
         .secret-info {
-            background: rgba(0, 255, 100, 0.05);
-            border: 1px solid rgba(0, 255, 100, 0.15);
+            background: rgba(0,255,100,0.05);
+            border: 1px solid rgba(0,255,100,0.15);
             border-radius: 12px;
             padding: 10px 16px;
             margin-bottom: 16px;
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255,255,255,0.6);
         }
-        .secret-info strong {
-            color: #69db7c;
-        }
+        .secret-info strong { color: #69db7c; }
         @media (max-width: 600px) {
-            .container {
-                padding: 16px;
-            }
-            .user-table th,
-            .user-table td {
-                padding: 6px 8px;
-                font-size: 13px;
-            }
-            .tabs {
-                flex-wrap: wrap;
-            }
-            .tab {
-                flex: 1;
-                text-align: center;
-                font-size: 13px;
-                padding: 6px 12px;
-            }
+            .container { padding: 16px; }
+            .user-table th, .user-table td { padding: 6px 8px; font-size: 13px; }
+            .tabs { flex-wrap: wrap; }
+            .tab { flex: 1; text-align: center; font-size: 13px; padding: 6px 12px; }
         }
     </style>
 </head>
@@ -268,7 +172,6 @@
             </span>
         </div>
 
-        <!-- Auth -->
         <div id="authSection" class="auth-box">
             <h3 style="margin-bottom:12px;">🔐 Đăng nhập</h3>
             <input type="text" id="loginUser" placeholder="Tên" value="admin" />
@@ -277,19 +180,16 @@
             <button id="loginBtn" class="btn btn-primary" style="width:100%;padding:12px;">Đăng nhập</button>
         </div>
 
-        <!-- Admin Panel -->
         <div id="adminPanel" class="hidden">
             <div class="secret-info">
                 🔑 <strong>Xác thực:</strong> Web trung gian chỉ chấp nhận dữ liệu từ web chính có cùng Secret Key.
             </div>
-
             <div class="tabs">
                 <button class="tab active" data-tab="users">👥 Users</button>
                 <button class="tab" data-tab="compose">✉️ Gửi thư</button>
                 <button class="tab" data-tab="inbox">📩 Inbox</button>
             </div>
 
-            <!-- Tab Users -->
             <div id="tab-users" class="tab-content active">
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
                     <button id="syncBtn" class="btn btn-primary btn-sm">☁️ Đồng bộ</button>
@@ -305,7 +205,6 @@
                 </div>
             </div>
 
-            <!-- Tab Compose -->
             <div id="tab-compose" class="tab-content">
                 <h3 style="margin-bottom:10px;">✉️ Gửi thư</h3>
                 <select id="recipientSelect"><option value="">-- Chọn người nhận --</option></select>
@@ -317,7 +216,6 @@
                 <div id="composeResult" style="margin-top:8px;color:rgba(255,255,255,0.6);"></div>
             </div>
 
-            <!-- Tab Inbox -->
             <div id="tab-inbox" class="tab-content">
                 <h3 style="margin-bottom:10px;">📩 Hộp thư đến</h3>
                 <div id="inboxList"></div>
@@ -335,10 +233,10 @@
 
     <script>
         // ============================================================
-        //  👇 CẤU HÌNH GITHUB GIST + SECRET KEY (THAY TOKEN CỦA BẠN)
+        //  👇 CẤU HÌNH (THAY TOKEN CỦA BẠN)
         // ============================================================
         const GIST_ID = 'a5fc09ae4bbd3f069e2bb08a3102d5ba';
-        const GITHUB_TOKEN = ' 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'; // ← Dán token vào đây
+        const GITHUB_TOKEN = ' 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'; // ← Dán token GitHub vào đây
         const SECRET_KEY = 'mySuperSecretKey123'; // ← Đổi thành key bí mật của bạn
         // ============================================================
 
@@ -351,7 +249,6 @@
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'admin123';
 
-        // ---- Storage ----
         const USERS_KEY = 'tiktok_users';
         const SESSION_KEY = 'tiktok_session';
 
@@ -359,25 +256,20 @@
             const data = localStorage.getItem(USERS_KEY);
             return data ? JSON.parse(data) : {};
         }
-
         function saveUsers(users) {
             localStorage.setItem(USERS_KEY, JSON.stringify(users));
         }
-
         function getSession() {
             const data = localStorage.getItem(SESSION_KEY);
             return data ? JSON.parse(data) : null;
         }
-
         function setSession(s) {
             localStorage.setItem(SESSION_KEY, JSON.stringify(s));
         }
-
         function clearSession() {
             localStorage.removeItem(SESSION_KEY);
         }
 
-        // ---- Gist API ----
         async function fetchGist() {
             const res = await fetch(GIST_URL, { headers: HEADERS });
             if (!res.ok) {
@@ -409,7 +301,6 @@
             return true;
         }
 
-        // ---- Đồng bộ (có kiểm tra secret) ----
         let cachedData = null;
 
         async function syncToGist() {
@@ -423,7 +314,7 @@
                 users: users,
                 messages: cachedData?.messages || [],
                 lastUpdated: Date.now(),
-                _secret: SECRET_KEY // ✅ Gửi kèm secret để xác thực
+                _secret: SECRET_KEY
             };
             await updateGist(payload);
             cachedData = payload;
@@ -434,15 +325,11 @@
         async function fetchAndMerge() {
             try {
                 const data = await fetchGist();
-                
-                // ✅ KIỂM TRA SECRET: Nếu không khớp -> từ chối dữ liệu
                 if (data._secret !== SECRET_KEY) {
-                    console.warn('⚠️ Dữ liệu không được xác thực (sai secret)');
-                    showToast('⚠️ Dữ liệu từ web chính không xác thực!', true);
+                    showToast('⚠️ Dữ liệu không xác thực! Secret không khớp.', true);
                     updateStatus('🔴 Lỗi xác thực: sai secret');
                     return null;
                 }
-
                 cachedData = data;
                 if (!data.users) data.users = {};
                 if (!data.messages) data.messages = [];
@@ -470,7 +357,6 @@
             }
         }
 
-        // ---- Render ----
         function renderUsers() {
             const users = getUsers();
             const tbody = document.getElementById('userTableBody');
@@ -538,7 +424,6 @@
             }).join('');
         }
 
-        // ---- Actions ----
         window.promoteUser = async function(username) {
             const users = getUsers();
             if (!users[username]) return showToast('Không tìm thấy user', true);
@@ -602,7 +487,6 @@
             }
         };
 
-        // ---- Gửi thư ----
         document.getElementById('sendMsgBtn').addEventListener('click', async function() {
             const to = document.getElementById('recipientSelect').value;
             const content = document.getElementById('messageContent').value.trim();
@@ -624,7 +508,7 @@
                     timestamp: Date.now()
                 });
                 data.lastUpdated = Date.now();
-                data._secret = SECRET_KEY; // ✅ Gửi kèm secret
+                data._secret = SECRET_KEY;
                 await updateGist(data);
                 cachedData = data;
                 showToast('✅ Đã gửi thư!');
@@ -636,7 +520,6 @@
             }
         });
 
-        // ---- Auth ----
         function login(username, password) {
             if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
                 setSession({ username, role: 'admin' });
@@ -667,9 +550,7 @@
             });
         }
 
-        // ---- Polling ----
         let pollInterval = null;
-
         function startPolling() {
             if (pollInterval) clearInterval(pollInterval);
             pollInterval = setInterval(async () => {
@@ -682,7 +563,6 @@
             document.getElementById('statusText').textContent = msg;
         }
 
-        // ---- Toast ----
         function showToast(msg, isError = false) {
             const el = document.getElementById('toast');
             el.textContent = msg;
@@ -692,7 +572,6 @@
             el._timeout = setTimeout(() => el.classList.remove('show'), 3000);
         }
 
-        // ---- Test connection ----
         async function testConnection() {
             try {
                 const data = await fetchGist();
@@ -710,7 +589,6 @@
             }
         }
 
-        // ---- DOM Events ----
         document.addEventListener('DOMContentLoaded', function() {
             const session = getSession();
             if (session && session.role === 'admin') {
@@ -720,7 +598,6 @@
                 updateStatus('🔴 Vui lòng đăng nhập');
             }
 
-            // Login
             document.getElementById('loginBtn').addEventListener('click', function() {
                 const username = document.getElementById('loginUser').value.trim();
                 const password = document.getElementById('loginPass').value.trim();
@@ -738,10 +615,8 @@
                 }
             });
 
-            // Logout
             document.getElementById('logoutBtn').addEventListener('click', logout);
 
-            // Tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -753,7 +628,6 @@
                 });
             });
 
-            // Sync
             document.getElementById('syncBtn').addEventListener('click', async () => {
                 await syncToGist();
                 renderUsers();
@@ -769,7 +643,6 @@
             });
             document.getElementById('testBtn').addEventListener('click', testConnection);
 
-            // Export/Import
             document.getElementById('exportBtn').addEventListener('click', async () => {
                 const data = await fetchGist();
                 const json = JSON.stringify(data, null, 2);
@@ -792,7 +665,6 @@
                     const text = await navigator.clipboard.readText();
                     const imported = JSON.parse(text);
                     if (!imported.users || !imported.messages) throw new Error('Invalid');
-                    // Kiểm tra secret khi import
                     if (imported._secret !== SECRET_KEY) {
                         showToast('⚠️ Dữ liệu không xác thực! Secret không khớp.', true);
                         return;
@@ -801,8 +673,7 @@
                     let count = 0;
                     for (const [name, info] of Object.entries(imported.users)) {
                         if (name === ADMIN_USERNAME) continue;
-                        if (!current[name]) { current[name] = info;
-                            count++; }
+                        if (!current[name]) { current[name] = info; count++; }
                     }
                     saveUsers(current);
                     await syncToGist();
@@ -813,7 +684,6 @@
                 }
             });
 
-            // Enter key
             document.getElementById('loginPass').addEventListener('keydown', e => {
                 if (e.key === 'Enter') document.getElementById('loginBtn').click();
             });

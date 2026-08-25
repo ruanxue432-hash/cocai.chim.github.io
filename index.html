@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web trung gian - Quản trị TikTok</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web trung gian - Quản trị</title>
     <style>
         * {
             margin: 0;
@@ -11,224 +11,162 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: Arial, sans-serif;
             background: #0b0b1a;
-            background-image: radial-gradient(ellipse at 20% 50%, #1a1a3e 0%, #0b0b1a 70%);
+            color: #fff;
+            padding: 20px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 950px;
             width: 100%;
             background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(24px);
-            border-radius: 40px;
-            padding: 40px 32px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
         }
         h1 {
-            color: #fff;
-            font-size: 28px;
+            color: #ff0050;
             margin-bottom: 8px;
-        }
-        h1 span {
-            background: linear-gradient(135deg, #ff0050, #00f2ea);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
         .sub {
             color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 24px;
-            font-size: 14px;
+            margin-bottom: 20px;
         }
         .status-bar {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 18px;
+            border-radius: 12px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 12px 20px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-        }
-        .status-bar .left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-        }
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .dot.online {
-            background: #4caf50;
-        }
-        .dot.offline {
-            background: #ff5252;
-        }
-        .dot.syncing {
-            background: #ffc107;
-            animation: pulse 0.8s infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.3;
-            }
+            gap: 10px;
+            margin-bottom: 20px;
         }
         .btn {
-            padding: 8px 18px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 30px;
-            font-size: 14px;
+            border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.3s;
             color: #fff;
+            transition: 0.3s;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #ff0050, #d4006e);
+            background: #ff0050;
         }
         .btn-primary:hover {
-            transform: scale(1.05);
-        }
-        .btn-outline {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.15);
+            opacity: 0.8;
         }
         .btn-success {
-            background: #4caf50;
+            background: #00c851;
         }
         .btn-success:hover {
-            background: #43a047;
-        }
-        .btn-warning {
-            background: #ff9800;
-        }
-        .btn-warning:hover {
-            background: #f57c00;
+            opacity: 0.8;
         }
         .btn-danger {
-            background: #f44336;
+            background: #ff4444;
         }
         .btn-danger:hover {
-            background: #d32f2f;
+            opacity: 0.8;
+        }
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
         .btn-sm {
             padding: 4px 12px;
             font-size: 12px;
         }
-        .auth-box {
-            max-width: 400px;
-            margin: 40px auto;
-        }
-        .auth-box input {
+        input,
+        textarea,
+        select {
             width: 100%;
-            padding: 14px 18px;
-            border-radius: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.12);
             background: rgba(255, 255, 255, 0.05);
             color: #fff;
-            font-size: 16px;
-            margin-bottom: 12px;
+            font-size: 15px;
             outline: none;
+            margin-bottom: 10px;
         }
-        .auth-box input:focus {
+        input:focus,
+        textarea:focus,
+        select:focus {
             border-color: #ff0050;
         }
-        .auth-box .btn {
-            width: 100%;
-            padding: 14px;
-            font-size: 16px;
+        select option {
+            background: #1a1a2e;
         }
-        .auth-error {
-            color: #ff6b6b;
+        .hidden {
+            display: none !important;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 40px;
             font-size: 14px;
-            min-height: 24px;
+            z-index: 999;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
         }
-
-        /* Tabs */
+        .toast.show {
+            opacity: 1;
+        }
         .tabs {
             display: flex;
             gap: 8px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding-bottom: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
         }
         .tab {
-            padding: 10px 20px;
+            padding: 8px 18px;
             border-radius: 30px;
             background: transparent;
             color: rgba(255, 255, 255, 0.5);
             border: none;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.3s;
         }
         .tab.active {
             background: rgba(255, 255, 255, 0.08);
             color: #fff;
-        }
-        .tab:hover {
-            background: rgba(255, 255, 255, 0.04);
         }
         .tab-content {
             display: none;
         }
         .tab-content.active {
             display: block;
-            animation: fadeUp 0.3s ease;
         }
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .user-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
         }
         .user-table th,
         .user-table td {
-            padding: 12px 16px;
+            padding: 10px 14px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            color: #fff;
         }
         .user-table th {
             color: rgba(255, 255, 255, 0.4);
-            font-weight: 500;
             font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .user-table tr:hover {
-            background: rgba(255, 255, 255, 0.03);
         }
         .role-badge {
-            display: inline-block;
             padding: 2px 14px;
             border-radius: 20px;
             font-size: 12px;
@@ -242,17 +180,10 @@
             background: rgba(255, 255, 255, 0.12);
             color: rgba(255, 255, 255, 0.6);
         }
-        .actions-cell {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        /* Message */
         .message-item {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 12px;
-            padding: 14px 18px;
+            padding: 12px 16px;
             margin-bottom: 10px;
             border-left: 3px solid transparent;
         }
@@ -270,100 +201,34 @@
         .message-item .msg-content {
             color: #fff;
         }
-        .message-item .msg-actions {
-            margin-top: 8px;
+        .actions-cell {
             display: flex;
-            gap: 8px;
-        }
-        .compose-form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 12px;
-        }
-        .compose-form select,
-        .compose-form textarea,
-        .compose-form input {
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-        }
-        .compose-form select option {
-            background: #1e1e2f;
-        }
-        .compose-form textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        .compose-form .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        .compose-form .checkbox-group input {
-            width: 18px;
-            height: 18px;
-            accent-color: #ff0050;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.85);
-            color: #fff;
-            padding: 12px 28px;
-            border-radius: 40px;
-            font-size: 14px;
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            max-width: 90%;
-            text-align: center;
-        }
-        .toast.show {
-            opacity: 1;
-        }
-        .hidden {
-            display: none !important;
+            gap: 6px;
+            flex-wrap: wrap;
         }
         .footer-actions {
             display: flex;
+            gap: 10px;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 24px;
-            padding-top: 20px;
+            margin-top: 20px;
+            padding-top: 16px;
             border-top: 1px solid rgba(255, 255, 255, 0.06);
         }
-        .debug-info {
-            background: rgba(255, 0, 80, 0.08);
-            border-left: 3px solid #ff0050;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-top: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 13px;
-            display: none;
-            word-break: break-all;
+        .auth-box {
+            max-width: 400px;
+            margin: 40px auto;
         }
-        .debug-info.show {
-            display: block;
+        .auth-box input {
+            margin-bottom: 12px;
         }
         @media (max-width: 600px) {
             .container {
-                padding: 20px 16px;
+                padding: 16px;
             }
-            .status-bar {
-                flex-direction: column;
-                align-items: stretch;
+            .user-table th,
+            .user-table td {
+                padding: 6px 8px;
+                font-size: 13px;
             }
             .tabs {
                 flex-wrap: wrap;
@@ -371,74 +236,51 @@
             .tab {
                 flex: 1;
                 text-align: center;
-                padding: 8px 12px;
                 font-size: 13px;
-            }
-            .user-table th,
-            .user-table td {
-                padding: 8px 10px;
-                font-size: 13px;
-            }
-            .actions-cell {
-                flex-direction: column;
+                padding: 6px 12px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="app">
-
-        <h1>🎵 <span>Web trung gian</span></h1>
-        <div class="sub">Quản trị TikTok Downloader – Đồng bộ qua JSONBin</div>
+    <div class="container">
+        <h1>🎵 Web trung gian</h1>
+        <div class="sub">Quản trị TikTok – Đồng bộ qua GitHub Gist</div>
 
         <div class="status-bar">
-            <div class="left">
-                <span class="dot offline" id="statusDot"></span>
-                <span id="statusText">Đang kết nối...</span>
-                <span style="opacity:0.4;">|</span>
-                <span id="userCount">👥 0 user</span>
-                <span style="opacity:0.4;">|</span>
-                <span id="lastUpdate" style="opacity:0.4;">Chưa cập nhật</span>
-                <span style="opacity:0.4;">|</span>
-                <span id="msgBadge" style="background:#ff0050; color:#fff; border-radius:50%; padding:0 8px; font-size:12px; display:none;">0</span>
-            </div>
-            <div>
+            <span id="statusText">🔴 Đang kết nối...</span>
+            <span>
                 <button id="testBtn" class="btn btn-outline btn-sm">🔍 Kiểm tra</button>
-                <button id="logoutBtn" class="btn btn-outline btn-sm" style="display:none;">🚪 Đăng xuất</button>
-            </div>
+                <button id="logoutBtn" class="btn btn-outline btn-sm hidden">🚪 Đăng xuất</button>
+            </span>
         </div>
 
+        <!-- Auth -->
         <div id="authSection" class="auth-box">
-            <h3 style="color:#fff; margin-bottom:16px;">🔐 Đăng nhập quản trị</h3>
-            <input type="text" id="loginUser" placeholder="Tên đăng nhập" value="admin" />
+            <h3 style="margin-bottom:12px;">🔐 Đăng nhập</h3>
+            <input type="text" id="loginUser" placeholder="Tên" value="admin" />
             <input type="password" id="loginPass" placeholder="Mật khẩu" value="admin123" />
-            <div id="authError" class="auth-error"></div>
-            <button id="loginBtn" class="btn btn-primary">Đăng nhập</button>
+            <div id="authError" style="color:#ff6b6b;font-size:14px;min-height:20px;"></div>
+            <button id="loginBtn" class="btn btn-primary" style="width:100%;padding:12px;">Đăng nhập</button>
         </div>
 
+        <!-- Admin Panel -->
         <div id="adminPanel" class="hidden">
-
-            <!-- Tabs -->
             <div class="tabs">
                 <button class="tab active" data-tab="users">👥 Users</button>
                 <button class="tab" data-tab="compose">✉️ Gửi thư</button>
-                <button class="tab" data-tab="inbox">📩 Inbox <span id="inboxBadge" style="background:#ff0050; color:#fff; border-radius:50%; padding:0 8px; font-size:11px; display:none;">0</span></button>
-                <button class="tab" data-tab="sent">📤 Đã gửi</button>
+                <button class="tab" data-tab="inbox">📩 Inbox</button>
             </div>
 
             <!-- Tab Users -->
             <div id="tab-users" class="tab-content active">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
-                    <h3 style="color:#fff; font-weight:400;">👥 Danh sách người dùng</h3>
-                    <div>
-                        <button id="syncBtn" class="btn btn-primary btn-sm">☁️ Đồng bộ</button>
-                        <button id="refreshBtn" class="btn btn-outline btn-sm">🔄 Làm mới</button>
-                    </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                    <button id="syncBtn" class="btn btn-primary btn-sm">☁️ Đồng bộ</button>
+                    <button id="refreshBtn" class="btn btn-outline btn-sm">🔄 Làm mới</button>
                 </div>
-                <div id="debugInfo" class="debug-info"></div>
                 <div style="overflow-x:auto;">
-                    <table class="user-table" id="userTable">
+                    <table class="user-table">
                         <thead><tr><th>Tên</th><th>Role</th><th>Thao tác</th></tr></thead>
                         <tbody id="userTableBody">
                             <tr><td colspan="3" style="text-align:center;color:rgba(255,255,255,0.3);">Chưa có dữ liệu</td></tr>
@@ -449,76 +291,60 @@
 
             <!-- Tab Compose -->
             <div id="tab-compose" class="tab-content">
-                <h3 style="color:#fff; font-weight:400; margin-bottom:12px;">✉️ Gửi thư mới</h3>
-                <form id="composeForm" class="compose-form">
-                    <select id="recipientSelect" required>
-                        <option value="">-- Chọn người nhận --</option>
-                    </select>
-                    <textarea id="messageContent" placeholder="Nội dung tin nhắn..." required></textarea>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="inviteAdmin" />
-                        <label for="inviteAdmin">📌 Gửi lời mời làm admin</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="align-self:flex-start;">📤 Gửi thư</button>
-                </form>
-                <div id="composeResult" style="margin-top:10px; color:rgba(255,255,255,0.6);"></div>
+                <h3 style="margin-bottom:10px;">✉️ Gửi thư</h3>
+                <select id="recipientSelect"><option value="">-- Chọn người nhận --</option></select>
+                <textarea id="messageContent" placeholder="Nội dung tin nhắn..." rows="3"></textarea>
+                <label style="color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                    <input type="checkbox" id="inviteAdmin" /> 📌 Gửi lời mời làm admin
+                </label>
+                <button id="sendMsgBtn" class="btn btn-primary">📤 Gửi thư</button>
+                <div id="composeResult" style="margin-top:8px;color:rgba(255,255,255,0.6);"></div>
             </div>
 
             <!-- Tab Inbox -->
             <div id="tab-inbox" class="tab-content">
-                <h3 style="color:#fff; font-weight:400; margin-bottom:12px;">📩 Hộp thư đến</h3>
+                <h3 style="margin-bottom:10px;">📩 Hộp thư đến</h3>
                 <div id="inboxList"></div>
             </div>
 
-            <!-- Tab Sent -->
-            <div id="tab-sent" class="tab-content">
-                <h3 style="color:#fff; font-weight:400; margin-bottom:12px;">📤 Thư đã gửi</h3>
-                <div id="sentList"></div>
-            </div>
-
             <div class="footer-actions">
-                <button id="exportBtn" class="btn btn-outline">📋 Xuất JSON</button>
-                <button id="importBtn" class="btn btn-outline">📥 Nhập JSON</button>
-                <button id="syncUpBtn" class="btn btn-success">☁️ Đồng bộ thủ công</button>
+                <button id="exportBtn" class="btn btn-outline btn-sm">📋 Xuất JSON</button>
+                <button id="importBtn" class="btn btn-outline btn-sm">📥 Nhập JSON</button>
+                <button id="syncUpBtn" class="btn btn-success btn-sm">☁️ Đồng bộ thủ công</button>
             </div>
         </div>
-
     </div>
 
     <div id="toast" class="toast"></div>
 
     <script>
         // ============================================================
-        //  CẤU HÌNH JSONBIN (THAY BẰNG ID VÀ KEY CỦA BẠN)
+        //  👇 CẤU HÌNH GITHUB GIST (THAY TOKEN CỦA BẠN)
         // ============================================================
-        const BIN_ID = '6a8d5715f5f4af5e293f7ca4'; // ← Bin ID của bạn
-        const API_KEY = ' $2a$10$pEiPqLci6pwUrHYgPldafuDA0NrT8hmsAM7UxxqkiwX0nAtXmY4M2'; // ← Dán API Key vào đây
-        
+        const GIST_ID = 'a5fc09ae4bbd3f069e2bb08a3102d5ba';
+        const GITHUB_TOKEN = ' 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'; // ← Dán token vào đây
         // ============================================================
 
-        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        const GIST_URL = `https://api.github.com/gists/${GIST_ID}`;
         const HEADERS = {
-            'Content-Type': 'application/json',
-            'X-Master-Key': API_KEY
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/json'
         };
 
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'admin123';
 
-        // ============================================================
-        //  QUẢN LÝ DỮ LIỆU
-        // ============================================================
-
-        const STORAGE_KEY = 'tiktok_users';
+        // ---- Storage ----
+        const USERS_KEY = 'tiktok_users';
         const SESSION_KEY = 'tiktok_session';
 
         function getUsers() {
-            const data = localStorage.getItem(STORAGE_KEY);
+            const data = localStorage.getItem(USERS_KEY);
             return data ? JSON.parse(data) : {};
         }
 
         function saveUsers(users) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
         }
 
         function getSession() {
@@ -526,261 +352,123 @@
             return data ? JSON.parse(data) : null;
         }
 
-        function setSession(session) {
-            localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        function setSession(s) {
+            localStorage.setItem(SESSION_KEY, JSON.stringify(s));
         }
 
         function clearSession() {
             localStorage.removeItem(SESSION_KEY);
         }
 
-        // ---- JSONBin API ----
-        let cachedRecord = null;
-
-        async function fetchBin() {
-            try {
-                const res = await fetch(JSONBIN_URL, { headers: HEADERS });
-                if (!res.ok) {
-                    const errData = await res.json().catch(() => ({}));
-                    throw new Error(`HTTP ${res.status}: ${errData.message || res.statusText}`);
-                }
-                const data = await res.json();
-                cachedRecord = data.record;
-                // Đảm bảo có trường messages
-                if (!cachedRecord.messages) cachedRecord.messages = [];
-                if (!cachedRecord.users) cachedRecord.users = {};
-                return cachedRecord;
-            } catch (err) {
-                console.error('Lỗi đọc JSONBin:', err);
-                throw err;
+        // ---- Gist API ----
+        async function fetchGist() {
+            const res = await fetch(GIST_URL, { headers: HEADERS });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(`HTTP ${res.status}: ${err.message || res.statusText}`);
             }
+            const data = await res.json();
+            const content = data.files['data.json'].content;
+            return JSON.parse(content);
         }
 
-        async function updateBin(content) {
-            try {
-                const res = await fetch(JSONBIN_URL, {
-                    method: 'PUT',
-                    headers: HEADERS,
-                    body: JSON.stringify(content)
-                });
-                if (!res.ok) {
-                    const errData = await res.json().catch(() => ({}));
-                    throw new Error(`HTTP ${res.status}: ${errData.message || res.statusText}`);
+        async function updateGist(content) {
+            const payload = {
+                files: {
+                    'data.json': {
+                        content: JSON.stringify(content, null, 2)
+                    }
                 }
-                cachedRecord = content;
-                return true;
-            } catch (err) {
-                console.error('Lỗi ghi JSONBin:', err);
-                throw err;
+            };
+            const res = await fetch(GIST_URL, {
+                method: 'PATCH',
+                headers: { ...HEADERS, 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(`HTTP ${res.status}: ${err.message || res.statusText}`);
             }
+            return true;
         }
 
-        // ---- Hợp nhất dữ liệu ----
-        function mergeUsersFromCloud(cloudUsers) {
-            const local = getUsers();
-            let changed = false;
-            for (const [username, data] of Object.entries(cloudUsers)) {
-                if (username === ADMIN_USERNAME) continue;
-                if (!local[username] || local[username].role !== data.role) {
-                    local[username] = data;
-                    changed = true;
-                }
-            }
-            if (changed) {
-                saveUsers(local);
-                return true;
-            }
-            return false;
-        }
+        // ---- Đồng bộ ----
+        let cachedData = null;
 
-        // ---- Đồng bộ lên cloud ----
-        async function syncToBin() {
+        async function syncToGist() {
             const users = getUsers();
             if (!users[ADMIN_USERNAME]) {
                 users[ADMIN_USERNAME] = { password: ADMIN_PASSWORD, role: 'admin' };
             } else {
                 users[ADMIN_USERNAME].role = 'admin';
             }
-            // Lấy messages hiện tại từ cache (hoặc từ record cũ)
-            const current = cachedRecord || (await fetchBin());
             const payload = {
                 users: users,
-                messages: current.messages || [],
+                messages: cachedData?.messages || [],
                 lastUpdated: Date.now()
             };
-            await updateBin(payload);
-            updateStatus('online', 'Đã đồng bộ ' + new Date().toLocaleTimeString());
+            await updateGist(payload);
+            cachedData = payload;
             showToast('☁️ Đồng bộ thành công!');
+            updateStatus('🟢 Đã đồng bộ ' + new Date().toLocaleTimeString());
         }
 
-        // ---- Gửi thư ----
-        async function sendMessage(to, content, isInvite = false) {
-            const session = getSession();
-            if (!session) throw new Error('Chưa đăng nhập');
-            const record = await fetchBin();
-            const msg = {
-                id: Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                from: session.username,
-                to: to,
-                content: content,
-                type: isInvite ? 'invite_admin' : 'normal',
-                status: 'unread',
-                timestamp: Date.now()
-            };
-            if (!record.messages) record.messages = [];
-            record.messages.push(msg);
-            record.lastUpdated = Date.now();
-            await updateBin(record);
-            return msg;
-        }
-
-        // ---- Lấy tin nhắn ----
-        function getMessages(record) {
-            return record.messages || [];
-        }
-
-        // ---- Đánh dấu đã đọc ----
-        async function markAsRead(msgId) {
-            const record = await fetchBin();
-            const msg = record.messages.find(m => m.id === msgId);
-            if (msg) {
-                msg.status = 'read';
-                await updateBin(record);
-                return true;
-            }
-            return false;
-        }
-
-        // ============================================================
-        //  POLLING
-        // ============================================================
-
-        let pollingInterval = null;
-
-        async function pollBin() {
+        async function fetchAndMerge() {
             try {
-                const cloud = await fetchBin();
-                if (!cloud || !cloud.users) {
-                    updateStatus('offline', 'Dữ liệu JSONBin không hợp lệ');
-                    return;
+                const data = await fetchGist();
+                cachedData = data;
+                if (!data.users) data.users = {};
+                if (!data.messages) data.messages = [];
+
+                const localUsers = getUsers();
+                let changed = false;
+                for (const [username, info] of Object.entries(data.users)) {
+                    if (username === ADMIN_USERNAME) continue;
+                    if (!localUsers[username] || localUsers[username].role !== info.role) {
+                        localUsers[username] = info;
+                        changed = true;
+                    }
                 }
-                const changed = mergeUsersFromCloud(cloud.users);
                 if (changed) {
+                    saveUsers(localUsers);
                     showToast('🔄 Đã cập nhật dữ liệu user');
-                    renderUsers();
                 }
-                // Cập nhật inbox badge
-                updateInboxBadge(cloud);
-                updateStatus('online', 'Đã cập nhật ' + new Date(cloud.lastUpdated).toLocaleTimeString());
-                document.getElementById('lastUpdate').textContent = '🕐 ' + new Date(cloud.lastUpdated).toLocaleString();
-                // Render inbox/sent nếu tab đang mở
-                const activeTab = document.querySelector('.tab.active');
-                if (activeTab) {
-                    const tabName = activeTab.dataset.tab;
-                    if (tabName === 'inbox') renderInbox(cloud);
-                    else if (tabName === 'sent') renderSent(cloud);
-                }
+                renderUsers();
+                updateStatus('🟢 Cập nhật lúc ' + new Date().toLocaleTimeString());
+                return data;
             } catch (err) {
-                updateStatus('offline', 'Lỗi: ' + err.message);
-                showDebug('Lỗi poll: ' + err.message);
+                updateStatus('🔴 Lỗi: ' + err.message);
+                showToast('❌ ' + err.message, true);
+                return null;
             }
         }
 
-        function startPolling() {
-            if (pollingInterval) clearInterval(pollingInterval);
-            pollBin();
-            pollingInterval = setInterval(pollBin, 5000);
-        }
-
-        function stopPolling() {
-            if (pollingInterval) {
-                clearInterval(pollingInterval);
-                pollingInterval = null;
-            }
-        }
-
-        // ============================================================
-        //  UI HELPERS
-        // ============================================================
-
-        function showToast(msg, isError = false) {
-            const el = document.getElementById('toast');
-            el.textContent = msg;
-            el.style.background = isError ? 'rgba(200,50,50,0.9)' : 'rgba(0,0,0,0.85)';
-            el.classList.add('show');
-            clearTimeout(el._timeout);
-            el._timeout = setTimeout(() => el.classList.remove('show'), 4000);
-        }
-
-        function updateStatus(status, msg) {
-            const dot = document.getElementById('statusDot');
-            const text = document.getElementById('statusText');
-            dot.className = 'dot ' + status;
-            text.textContent = msg;
-        }
-
-        function showDebug(msg) {
-            const el = document.getElementById('debugInfo');
-            el.textContent = msg;
-            el.classList.add('show');
-        }
-
-        function hideDebug() {
-            document.getElementById('debugInfo').classList.remove('show');
-        }
-
-        function updateInboxBadge(record) {
-            const session = getSession();
-            if (!session) return;
-            const messages = getMessages(record);
-            const unread = messages.filter(m => m.to === session.username && m.status === 'unread');
-            const badge = document.getElementById('inboxBadge');
-            const badge2 = document.getElementById('msgBadge');
-            if (unread.length > 0) {
-                badge.textContent = unread.length;
-                badge.style.display = 'inline';
-                badge2.textContent = unread.length;
-                badge2.style.display = 'inline';
-            } else {
-                badge.style.display = 'none';
-                badge2.style.display = 'none';
-            }
-        }
-
-        // ============================================================
-        //  RENDER FUNCTIONS
-        // ============================================================
-
+        // ---- Render ----
         function renderUsers() {
             const users = getUsers();
             const tbody = document.getElementById('userTableBody');
             const entries = Object.entries(users);
-            document.getElementById('userCount').textContent = '👥 ' + entries.length + ' user';
-
             if (entries.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:rgba(255,255,255,0.3);">Chưa có dữ liệu</td></tr>';
                 return;
             }
-
             const session = getSession();
             const currentUser = session ? session.username : '';
-
             tbody.innerHTML = entries.map(([username, data]) => {
                 const isSelf = username === currentUser;
                 const isAdmin = data.role === 'admin';
                 return `
                     <tr>
-                        <td>${username} ${isSelf ? '<span style="color:rgba(255,255,255,0.3);font-size:12px;">(bạn)</span>' : ''}</td>
+                        <td>${username} ${isSelf ? '👤' : ''}</td>
                         <td><span class="role-badge ${isAdmin ? 'admin' : 'user'}">${isAdmin ? 'admin' : 'user'}</span></td>
                         <td class="actions-cell">
                             ${!isAdmin && !isSelf ? `<button class="btn btn-success btn-sm" onclick="promoteUser('${username}')">⬆️ Nâng</button>` : ''}
-                            ${isAdmin && !isSelf ? `<button class="btn btn-warning btn-sm" onclick="demoteUser('${username}')">⬇️ Hạ</button>` : ''}
-                            ${!isSelf && !isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteUser('${username}')">🗑️ Xóa</button>` : ''}
+                            ${isAdmin && !isSelf ? `<button class="btn btn-danger btn-sm" onclick="demoteUser('${username}')">⬇️ Hạ</button>` : ''}
+                            ${!isSelf ? `<button class="btn btn-danger btn-sm" onclick="deleteUser('${username}')">🗑️</button>` : ''}
                         </td>
                     </tr>
                 `;
             }).join('');
-            // Cập nhật danh sách recipient trong compose
             populateRecipients();
         }
 
@@ -790,157 +478,137 @@
             const session = getSession();
             const currentUser = session ? session.username : '';
             select.innerHTML = '<option value="">-- Chọn người nhận --</option>';
-            for (const [username] of Object.entries(users)) {
-                if (username !== currentUser && username !== ADMIN_USERNAME) {
-                    select.innerHTML += `<option value="${username}">${username}</option>`;
+            for (const [name] of Object.entries(users)) {
+                if (name !== currentUser && name !== ADMIN_USERNAME) {
+                    select.innerHTML += `<option value="${name}">${name}</option>`;
                 }
             }
         }
 
-        function renderInbox(record) {
+        function renderInbox() {
             const session = getSession();
-            if (!session) return;
-            const messages = getMessages(record);
-            const inbox = messages.filter(m => m.to === session.username);
+            if (!session || !cachedData) return;
+            const msgs = cachedData.messages.filter(m => m.to === session.username);
             const container = document.getElementById('inboxList');
-            if (inbox.length === 0) {
+            if (msgs.length === 0) {
                 container.innerHTML = '<p style="color:rgba(255,255,255,0.3);">📭 Hộp thư trống</p>';
                 return;
             }
-            container.innerHTML = inbox.sort((a, b) => b.timestamp - a.timestamp).map(msg => {
+            container.innerHTML = msgs.sort((a, b) => b.timestamp - a.timestamp).map(msg => {
                 const isUnread = msg.status === 'unread';
                 const isInvite = msg.type === 'invite_admin';
                 const date = new Date(msg.timestamp).toLocaleString();
                 return `
                     <div class="message-item ${isUnread ? 'unread' : ''}">
-                        <div class="msg-header">
-                            <span>Từ: <strong>${msg.from}</strong></span>
-                            <span>${date}</span>
-                        </div>
+                        <div class="msg-header"><span>Từ: <strong>${msg.from}</strong></span><span>${date}</span></div>
                         <div class="msg-content">${msg.content}</div>
-                        <div class="msg-actions">
-                            ${isUnread ? `<button class="btn btn-outline btn-sm" onclick="markRead('${msg.id}')">Đánh dấu đã đọc</button>` : ''}
-                            ${isInvite && isUnread ? `<button class="btn btn-success btn-sm" onclick="acceptInvite('${msg.from}')">✅ Chấp nhận làm admin</button>` : ''}
+                        <div style="margin-top:6px;display:flex;gap:8px;">
+                            ${isUnread ? `<button class="btn btn-outline btn-sm" onclick="markRead('${msg.id}')">📖 Đã đọc</button>` : ''}
+                            ${isInvite && isUnread ? `<button class="btn btn-success btn-sm" onclick="acceptInvite('${msg.from}')">✅ Chấp nhận admin</button>` : ''}
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        function renderSent(record) {
-            const session = getSession();
-            if (!session) return;
-            const messages = getMessages(record);
-            const sent = messages.filter(m => m.from === session.username);
-            const container = document.getElementById('sentList');
-            if (sent.length === 0) {
-                container.innerHTML = '<p style="color:rgba(255,255,255,0.3);">📤 Chưa gửi thư nào</p>';
-                return;
-            }
-            container.innerHTML = sent.sort((a, b) => b.timestamp - a.timestamp).map(msg => {
-                const date = new Date(msg.timestamp).toLocaleString();
-                const isInvite = msg.type === 'invite_admin';
-                return `
-                    <div class="message-item">
-                        <div class="msg-header">
-                            <span>Đến: <strong>${msg.to}</strong></span>
-                            <span>${date}</span>
-                        </div>
-                        <div class="msg-content">${msg.content} ${isInvite ? '📌 (Lời mời admin)' : ''}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ============================================================
-        //  ACTIONS
-        // ============================================================
-
+        // ---- Actions ----
         window.promoteUser = async function(username) {
             const users = getUsers();
             if (!users[username]) return showToast('Không tìm thấy user', true);
-            if (username === ADMIN_USERNAME) return showToast('Không thể nâng admin mặc định', true);
             users[username].role = 'admin';
             saveUsers(users);
-            try {
-                await syncToBin();
-                renderUsers();
-                showToast(`✅ Đã nâng ${username} thành admin`);
-            } catch (err) {
-                showToast('❌ Lỗi đồng bộ: ' + err.message, true);
-            }
+            await syncToGist();
+            renderUsers();
+            showToast(`✅ Đã nâng ${username} thành admin`);
         };
 
         window.demoteUser = async function(username) {
             const users = getUsers();
             if (!users[username]) return showToast('Không tìm thấy user', true);
-            if (username === ADMIN_USERNAME) return showToast('Không thể hạ admin mặc định', true);
             users[username].role = 'user';
             saveUsers(users);
-            try {
-                await syncToBin();
-                renderUsers();
-                showToast(`✅ Đã hạ ${username} thành user`);
-            } catch (err) {
-                showToast('❌ Lỗi đồng bộ: ' + err.message, true);
-            }
+            await syncToGist();
+            renderUsers();
+            showToast(`✅ Đã hạ ${username} thành user`);
         };
 
         window.deleteUser = async function(username) {
-            if (username === ADMIN_USERNAME) return showToast('Không thể xóa admin mặc định', true);
-            if (!confirm(`Xóa user "${username}"?`)) return;
+            if (username === ADMIN_USERNAME) return showToast('Không thể xóa admin', true);
+            if (!confirm(`Xóa "${username}"?`)) return;
             const users = getUsers();
             delete users[username];
             saveUsers(users);
-            try {
-                await syncToBin();
-                renderUsers();
-                showToast(`✅ Đã xóa ${username}`);
-            } catch (err) {
-                showToast('❌ Lỗi đồng bộ: ' + err.message, true);
-            }
+            await syncToGist();
+            renderUsers();
+            showToast(`✅ Đã xóa ${username}`);
         };
 
         window.markRead = async function(msgId) {
-            try {
-                await markAsRead(msgId);
+            if (!cachedData) return;
+            const msg = cachedData.messages.find(m => m.id === msgId);
+            if (msg) {
+                msg.status = 'read';
+                await updateGist(cachedData);
+                renderInbox();
                 showToast('✅ Đã đánh dấu đã đọc');
-                const record = await fetchBin();
-                updateInboxBadge(record);
-                renderInbox(record);
-            } catch (err) {
-                showToast('❌ Lỗi: ' + err.message, true);
             }
         };
 
         window.acceptInvite = async function(fromUser) {
             try {
-                const record = await fetchBin();
-                // Cập nhật role user thành admin
                 const users = getUsers();
                 if (!users[fromUser]) return showToast('Không tìm thấy user', true);
                 users[fromUser].role = 'admin';
                 saveUsers(users);
-                // Đánh dấu tất cả thư mời từ user này là đã đọc
-                for (const msg of record.messages) {
+                for (const msg of cachedData.messages) {
                     if (msg.from === fromUser && msg.type === 'invite_admin' && msg.to === getSession().username) {
                         msg.status = 'read';
                     }
                 }
-                await updateBin(record);
-                renderUsers();
-                renderInbox(record);
+                await updateGist(cachedData);
                 showToast(`✅ Bạn đã trở thành admin!`);
-                location.reload(); // refresh để cập nhật UI
+                renderUsers();
+                renderInbox();
+                setTimeout(() => location.reload(), 1000);
             } catch (err) {
-                showToast('❌ Lỗi: ' + err.message, true);
+                showToast('❌ ' + err.message, true);
             }
         };
 
-        // ============================================================
-        //  AUTH
-        // ============================================================
+        // ---- Gửi thư ----
+        document.getElementById('sendMsgBtn').addEventListener('click', async function() {
+            const to = document.getElementById('recipientSelect').value;
+            const content = document.getElementById('messageContent').value.trim();
+            const isInvite = document.getElementById('inviteAdmin').checked;
+            if (!to) return showToast('Chọn người nhận', true);
+            if (!content) return showToast('Nhập nội dung', true);
+            const session = getSession();
+            if (!session) return showToast('Chưa đăng nhập', true);
+            try {
+                const data = await fetchGist();
+                if (!data.messages) data.messages = [];
+                data.messages.push({
+                    id: Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                    from: session.username,
+                    to: to,
+                    content: content,
+                    type: isInvite ? 'invite_admin' : 'normal',
+                    status: 'unread',
+                    timestamp: Date.now()
+                });
+                data.lastUpdated = Date.now();
+                await updateGist(data);
+                cachedData = data;
+                showToast('✅ Đã gửi thư!');
+                document.getElementById('messageContent').value = '';
+                document.getElementById('inviteAdmin').checked = false;
+                renderInbox();
+            } catch (err) {
+                showToast('❌ ' + err.message, true);
+            }
+        });
 
+        // ---- Auth ----
         function login(username, password) {
             if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
                 setSession({ username, role: 'admin' });
@@ -963,67 +631,78 @@
         function showAdminPanel() {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
-            document.getElementById('logoutBtn').style.display = 'inline-block';
+            document.getElementById('logoutBtn').classList.remove('hidden');
             renderUsers();
-            testConnection().then(() => startPolling());
+            fetchAndMerge().then(() => {
+                renderInbox();
+                startPolling();
+            });
         }
 
-        function showAuth() {
-            document.getElementById('authSection').classList.remove('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
-            document.getElementById('logoutBtn').style.display = 'none';
-            stopPolling();
+        // ---- Polling ----
+        let pollInterval = null;
+
+        function startPolling() {
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = setInterval(async () => {
+                await fetchAndMerge();
+                renderInbox();
+            }, 5000);
         }
 
-        // ============================================================
-        //  TEST CONNECTION
-        // ============================================================
+        function updateStatus(msg) {
+            document.getElementById('statusText').textContent = msg;
+        }
 
+        // ---- Toast ----
+        function showToast(msg, isError = false) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.style.background = isError ? 'rgba(200,50,50,0.9)' : 'rgba(0,0,0,0.85)';
+            el.classList.add('show');
+            clearTimeout(el._timeout);
+            el._timeout = setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
+        // ---- Test connection ----
         async function testConnection() {
             try {
-                showToast('⏳ Đang kiểm tra...');
-                const data = await fetchBin();
-                showToast('✅ Kết nối JSONBin thành công! Số user: ' + Object.keys(data.users || {}).length);
-                updateStatus('online', 'Kết nối OK');
-                showDebug('✅ Bin ID: ' + BIN_ID + '\nSố user: ' + Object.keys(data.users || {}).length);
+                const data = await fetchGist();
+                showToast('✅ Kết nối Gist thành công!');
+                updateStatus('🟢 Kết nối OK');
                 return true;
             } catch (err) {
-                showToast('❌ Lỗi kết nối: ' + err.message, true);
-                updateStatus('offline', 'Lỗi: ' + err.message);
-                showDebug('❌ Lỗi kết nối:\n' + err.message + '\n\nKiểm tra lại:\n- Bin ID có đúng không?\n- API Key có đúng không?');
+                showToast('❌ Lỗi: ' + err.message, true);
+                updateStatus('🔴 Lỗi: ' + err.message);
                 return false;
             }
         }
 
-        // ============================================================
-        //  DOM EVENTS
-        // ============================================================
-
-        document.addEventListener('DOMContentLoaded', () => {
+        // ---- DOM Events ----
+        document.addEventListener('DOMContentLoaded', function() {
             const session = getSession();
             if (session && session.role === 'admin') {
                 showAdminPanel();
-                updateStatus('online', 'Đã đăng nhập');
+                updateStatus('🟢 Đã đăng nhập');
             } else {
-                showAuth();
-                updateStatus('offline', 'Vui lòng đăng nhập');
+                updateStatus('🔴 Vui lòng đăng nhập');
             }
 
             // Login
-            document.getElementById('loginBtn').addEventListener('click', () => {
+            document.getElementById('loginBtn').addEventListener('click', function() {
                 const username = document.getElementById('loginUser').value.trim();
                 const password = document.getElementById('loginPass').value.trim();
-                const errorEl = document.getElementById('authError');
+                const errEl = document.getElementById('authError');
                 if (!username || !password) {
-                    errorEl.textContent = 'Vui lòng nhập đầy đủ';
+                    errEl.textContent = 'Vui lòng nhập đầy đủ';
                     return;
                 }
                 if (login(username, password)) {
-                    errorEl.textContent = '';
+                    errEl.textContent = '';
                     showAdminPanel();
-                    updateStatus('online', 'Đã đăng nhập');
+                    updateStatus('🟢 Đã đăng nhập');
                 } else {
-                    errorEl.textContent = 'Sai tên hoặc mật khẩu';
+                    errEl.textContent = 'Sai tên hoặc mật khẩu';
                 }
             });
 
@@ -1035,72 +714,33 @@
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
-                    const tabName = this.dataset.tab;
+                    const target = this.dataset.tab;
                     document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-                    document.getElementById('tab-' + tabName).classList.add('active');
-                    // Render nội dung tương ứng
-                    if (tabName === 'inbox') {
-                        fetchBin().then(record => renderInbox(record));
-                    } else if (tabName === 'sent') {
-                        fetchBin().then(record => renderSent(record));
-                    } else if (tabName === 'compose') {
-                        populateRecipients();
-                    }
+                    document.getElementById('tab-' + target).classList.add('active');
+                    if (target === 'inbox') renderInbox();
                 });
             });
 
-            // Compose
-            document.getElementById('composeForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const to = document.getElementById('recipientSelect').value;
-                const content = document.getElementById('messageContent').value.trim();
-                const isInvite = document.getElementById('inviteAdmin').checked;
-                if (!to) { showToast('Vui lòng chọn người nhận', true); return; }
-                if (!content) { showToast('Vui lòng nhập nội dung', true); return; }
-                try {
-                    await sendMessage(to, content, isInvite);
-                    showToast('✅ Đã gửi thư thành công!');
-                    document.getElementById('messageContent').value = '';
-                    document.getElementById('inviteAdmin').checked = false;
-                    // Cập nhật inbox badge
-                    const record = await fetchBin();
-                    updateInboxBadge(record);
-                } catch (err) {
-                    showToast('❌ Lỗi gửi: ' + err.message, true);
-                }
-            });
-
-            // Sync buttons
+            // Sync
             document.getElementById('syncBtn').addEventListener('click', async () => {
-                try {
-                    await syncToBin();
-                    renderUsers();
-                    showToast('☁️ Đồng bộ thành công!');
-                } catch (err) {
-                    showToast('❌ Lỗi đồng bộ: ' + err.message, true);
-                }
+                await syncToGist();
+                renderUsers();
             });
             document.getElementById('syncUpBtn').addEventListener('click', async () => {
-                try {
-                    await syncToBin();
-                    renderUsers();
-                    showToast('☁️ Đồng bộ thành công!');
-                } catch (err) {
-                    showToast('❌ Lỗi đồng bộ: ' + err.message, true);
-                }
+                await syncToGist();
+                renderUsers();
             });
-
             document.getElementById('refreshBtn').addEventListener('click', async () => {
-                await pollBin();
-                showToast('🔄 Đã làm mới dữ liệu');
+                await fetchAndMerge();
+                renderInbox();
+                showToast('🔄 Đã làm mới');
             });
-
             document.getElementById('testBtn').addEventListener('click', testConnection);
 
-            // Export
+            // Export/Import
             document.getElementById('exportBtn').addEventListener('click', async () => {
-                const record = await fetchBin();
-                const json = JSON.stringify(record, null, 2);
+                const data = await fetchGist();
+                const json = JSON.stringify(data, null, 2);
                 try {
                     await navigator.clipboard.writeText(json);
                     showToast('✅ Đã sao chép JSON');
@@ -1115,43 +755,32 @@
                 }
             });
 
-            // Import
             document.getElementById('importBtn').addEventListener('click', async () => {
                 try {
                     const text = await navigator.clipboard.readText();
                     const imported = JSON.parse(text);
-                    if (!imported.users || !imported.messages) throw new Error('Dữ liệu không hợp lệ');
+                    if (!imported.users || !imported.messages) throw new Error('Invalid');
                     const current = getUsers();
                     let count = 0;
-                    for (const [username, data] of Object.entries(imported.users)) {
-                        if (username === ADMIN_USERNAME) continue;
-                        if (!current[username]) {
-                            current[username] = data;
-                            count++;
-                        }
+                    for (const [name, info] of Object.entries(imported.users)) {
+                        if (name === ADMIN_USERNAME) continue;
+                        if (!current[name]) { current[name] = info;
+                            count++; }
                     }
                     saveUsers(current);
-                    // Cập nhật messages vào record
-                    const record = await fetchBin();
-                    record.messages = imported.messages || [];
-                    record.users = current;
-                    record.lastUpdated = Date.now();
-                    await updateBin(record);
+                    await syncToGist();
                     renderUsers();
-                    showToast(`✅ Đã nhập ${count} user và đồng bộ`);
+                    showToast(`✅ Đã nhập ${count} user`);
                 } catch (err) {
-                    showToast('❌ Lỗi nhập: ' + err.message, true);
+                    showToast('❌ Lỗi: ' + err.message, true);
                 }
             });
 
-            // Enter key for login
-            document.getElementById('loginPass').addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') document.getElementById('loginBtn').click();
-            });
-            document.getElementById('loginUser').addEventListener('keydown', (e) => {
+            // Enter key
+            document.getElementById('loginPass').addEventListener('keydown', e => {
                 if (e.key === 'Enter') document.getElementById('loginBtn').click();
             });
         });
     </script>
 </body>
-                                    </html>
+                    </html>

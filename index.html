@@ -221,6 +221,18 @@
         .auth-box input {
             margin-bottom: 12px;
         }
+        .secret-info {
+            background: rgba(0, 255, 100, 0.05);
+            border: 1px solid rgba(0, 255, 100, 0.15);
+            border-radius: 12px;
+            padding: 10px 16px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .secret-info strong {
+            color: #69db7c;
+        }
         @media (max-width: 600px) {
             .container {
                 padding: 16px;
@@ -267,6 +279,10 @@
 
         <!-- Admin Panel -->
         <div id="adminPanel" class="hidden">
+            <div class="secret-info">
+                🔑 <strong>Xác thực:</strong> Web trung gian chỉ chấp nhận dữ liệu từ web chính có cùng Secret Key.
+            </div>
+
             <div class="tabs">
                 <button class="tab active" data-tab="users">👥 Users</button>
                 <button class="tab" data-tab="compose">✉️ Gửi thư</button>
@@ -319,10 +335,11 @@
 
     <script>
         // ============================================================
-        //  👇 CẤU HÌNH GITHUB GIST (THAY TOKEN CỦA BẠN)
+        //  👇 CẤU HÌNH GITHUB GIST + SECRET KEY (THAY TOKEN CỦA BẠN)
         // ============================================================
         const GIST_ID = 'a5fc09ae4bbd3f069e2bb08a3102d5ba';
         const GITHUB_TOKEN = ' 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'; // ← Dán token vào đây
+        const SECRET_KEY = 'mySuperSecretKey123'; // ← Đổi thành key bí mật của bạn
         // ============================================================
 
         const GIST_URL = `https://api.github.com/gists/${GIST_ID}`;
@@ -392,7 +409,7 @@
             return true;
         }
 
-        // ---- Đồng bộ ----
+        // ---- Đồng bộ (có kiểm tra secret) ----
         let cachedData = null;
 
         async function syncToGist() {
@@ -405,7 +422,8 @@
             const payload = {
                 users: users,
                 messages: cachedData?.messages || [],
-                lastUpdated: Date.now()
+                lastUpdated: Date.now(),
+                _secret: SECRET_KEY // ✅ Gửi kèm secret để xác thực
             };
             await updateGist(payload);
             cachedData = payload;
@@ -416,6 +434,15 @@
         async function fetchAndMerge() {
             try {
                 const data = await fetchGist();
+                
+                // ✅ KIỂM TRA SECRET: Nếu không khớp -> từ chối dữ liệu
+                if (data._secret !== SECRET_KEY) {
+                    console.warn('⚠️ Dữ liệu không được xác thực (sai secret)');
+                    showToast('⚠️ Dữ liệu từ web chính không xác thực!', true);
+                    updateStatus('🔴 Lỗi xác thực: sai secret');
+                    return null;
+                }
+
                 cachedData = data;
                 if (!data.users) data.users = {};
                 if (!data.messages) data.messages = [];
@@ -597,6 +624,7 @@
                     timestamp: Date.now()
                 });
                 data.lastUpdated = Date.now();
+                data._secret = SECRET_KEY; // ✅ Gửi kèm secret
                 await updateGist(data);
                 cachedData = data;
                 showToast('✅ Đã gửi thư!');
@@ -668,7 +696,11 @@
         async function testConnection() {
             try {
                 const data = await fetchGist();
-                showToast('✅ Kết nối Gist thành công!');
+                if (data._secret !== SECRET_KEY) {
+                    showToast('⚠️ Dữ liệu không xác thực! Secret không khớp.', true);
+                    return false;
+                }
+                showToast('✅ Kết nối Gist thành công! Dữ liệu hợp lệ.');
                 updateStatus('🟢 Kết nối OK');
                 return true;
             } catch (err) {
@@ -760,6 +792,11 @@
                     const text = await navigator.clipboard.readText();
                     const imported = JSON.parse(text);
                     if (!imported.users || !imported.messages) throw new Error('Invalid');
+                    // Kiểm tra secret khi import
+                    if (imported._secret !== SECRET_KEY) {
+                        showToast('⚠️ Dữ liệu không xác thực! Secret không khớp.', true);
+                        return;
+                    }
                     const current = getUsers();
                     let count = 0;
                     for (const [name, info] of Object.entries(imported.users)) {
@@ -783,4 +820,4 @@
         });
     </script>
 </body>
-                    </html>
+    </html>

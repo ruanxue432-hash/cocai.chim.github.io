@@ -1,77 +1,612 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tải Free Fire</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: #0d0d0d;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #fff;
-            text-align: center;
-        }
-        .container {
-            background: #1a1a1c;
-            padding: 50px 30px;
-            border-radius: 30px;
-            max-width: 400px;
-            width: 100%;
-            border: 2px solid #ff4757;
-        }
-        h1 {
-            font-size: 24px;
-            color: #aaa;
-            margin-bottom: 30px;
-            font-weight: normal;
-        }
-        .btn-ff {
-            display: block;
-            padding: 18px;
-            font-size: 22px;
-            font-weight: 700;
-            background: #e84118;
-            color: #fff;
-            border: none;
-            border-radius: 60px;
-            text-decoration: none;
-            cursor: pointer;
-            box-shadow: 0 0 30px rgba(232, 65, 24, 0.5);
-            transition: 0.3s;
-        }
-        .btn-ff:hover {
-            background: #c73018;
-            transform: scale(1.03);
-            box-shadow: 0 0 40px rgba(232, 65, 24, 0.7);
-        }
-        .note {
-            color: #666;
-            font-size: 13px;
-            margin-top: 25px;
-            border-top: 1px solid #2a2a2e;
-            padding-top: 18px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web trung gian - Quản trị TikTok Downloader</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0b0b1a;
+      background-image: radial-gradient(ellipse at 20% 50%, #1a1a3e 0%, #0b0b1a 70%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(24px);
+      border-radius: 40px;
+      padding: 40px 32px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    }
+    h1 {
+      color: #fff;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    h1 span { background: linear-gradient(135deg,#ff0050,#00f2ea); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .sub {
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: rgba(255,255,255,0.04);
+      padding: 12px 20px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+    .status-bar .left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot.online { background: #4caf50; }
+    .dot.offline { background: #ff5252; }
+    .dot.syncing { background: #ffc107; animation: pulse 0.8s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    .btn {
+      padding: 8px 18px;
+      border: none;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+    }
+    .btn-primary { background: linear-gradient(135deg,#ff0050,#d4006e); }
+    .btn-primary:hover { transform: scale(1.05); }
+    .btn-outline { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); }
+    .btn-outline:hover { background: rgba(255,255,255,0.15); }
+    .btn-success { background: #4caf50; }
+    .btn-success:hover { background: #43a047; }
+    .btn-warning { background: #ff9800; }
+    .btn-warning:hover { background: #f57c00; }
+    .btn-danger { background: #f44336; }
+    .btn-danger:hover { background: #d32f2f; }
+    .btn-sm { padding: 4px 12px; font-size: 12px; }
+
+    .auth-box {
+      max-width: 400px;
+      margin: 40px auto;
+    }
+    .auth-box input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 16px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    .auth-box input:focus { border-color: #ff0050; }
+    .auth-box .btn { width: 100%; padding: 14px; font-size: 16px; }
+    .auth-error { color: #ff6b6b; font-size: 14px; min-height: 24px; }
+
+    .user-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    .user-table th, .user-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: #fff;
+    }
+    .user-table th { color: rgba(255,255,255,0.4); font-weight: 500; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .user-table tr:hover { background: rgba(255,255,255,0.03); }
+    .role-badge {
+      display: inline-block;
+      padding: 2px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .role-badge.admin { background: #f5576c; color: #fff; }
+    .role-badge.user { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.6); }
+
+    .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-size: 14px;
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+    .hidden { display: none !important; }
+
+    .footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    @media (max-width: 600px) {
+      .container { padding: 20px 16px; }
+      .status-bar { flex-direction: column; align-items: stretch; }
+      .user-table th, .user-table td { padding: 8px 10px; font-size: 13px; }
+      .actions-cell { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎯 TẢI GAME</h1>
-        <a href="https://www.mediafire.com/file/71lw0gfap3gqp52/FreeFire%20_Global.apk/file" target="_blank" class="btn-ff">
-            🔥 Free Fire goba ob54
-        </a>
-        <div class="note">
-            ⚡ Bấm vào nút để tải APK
-        </div>
+
+<div class="container" id="app">
+
+  <h1>🎵 <span>Web trung gian</span></h1>
+  <div class="sub">Quản trị TikTok Downloader – Đồng bộ qua GitHub Gist</div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="left">
+      <span class="dot offline" id="statusDot"></span>
+      <span id="statusText">Đang kết nối...</span>
+      <span style="opacity:0.4;">|</span>
+      <span id="userCount">👥 0 user</span>
+      <span style="opacity:0.4;">|</span>
+      <span id="lastUpdate" style="opacity:0.4;">Chưa cập nhật</span>
     </div>
+    <div>
+      <button id="logoutBtn" class="btn btn-outline" style="display:none;">🚪 Đăng xuất</button>
+    </div>
+  </div>
+
+  <!-- Auth -->
+  <div id="authSection" class="auth-box">
+    <h3 style="color:#fff; margin-bottom:16px;">🔐 Đăng nhập quản trị</h3>
+    <input type="text" id="loginUser" placeholder="Tên đăng nhập" value="admin" />
+    <input type="password" id="loginPass" placeholder="Mật khẩu" value="admin123" />
+    <div id="authError" class="auth-error"></div>
+    <button id="loginBtn" class="btn btn-primary">Đăng nhập</button>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="adminPanel" class="hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+      <h3 style="color:#fff; font-weight:400;">👥 Danh sách người dùng</h3>
+      <div>
+        <button id="syncBtn" class="btn btn-primary btn-sm">☁️ Đồng bộ lên Gist</button>
+        <button id="refreshBtn" class="btn btn-outline btn-sm">🔄 Lấy dữ liệu mới</button>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="user-table" id="userTable">
+        <thead>
+          <tr><th>Tên</th><th>Role</th><th>Thao tác</th></tr>
+        </thead>
+        <tbody id="userTableBody">
+          <tr><td colspan="3" style="text-align:center;color:rgba(255,255,255,0.3);">Chưa có dữ liệu</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer-actions">
+      <button id="exportBtn" class="btn btn-outline">📋 Xuất JSON</button>
+      <button id="importBtn" class="btn btn-outline">📥 Nhập JSON (từ clipboard)</button>
+      <button id="syncUpBtn" class="btn btn-success">☁️ Đồng bộ lên Gist (thủ công)</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ============================================================
+//  CẤU HÌNH GITHUB GIST (THAY THẾ BẰNG ID VÀ TOKEN CỦA BẠN)
+// ============================================================
+const GIST_ID = 'YOUR_GIST_ID';          // Ví dụ: 'abc123def456'
+const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN'; // Ví dụ: 'ghp_xxxxx'
+const ADMIN_USERNAME = 'admin';
+const ADMIN_PASSWORD = 'admin123';
+
+// ============================================================
+//  QUẢN LÝ DỮ LIỆU (localStorage + Gist)
+// ============================================================
+
+const STORAGE_KEY = 'tiktok_users';
+const SESSION_KEY = 'tiktok_session';
+
+function getUsers() {
+  const data = localStorage.getItem(STORAGE_KEY);
+  return data ? JSON.parse(data) : {};
+}
+function saveUsers(users) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+}
+function getSession() {
+  const data = localStorage.getItem(SESSION_KEY);
+  return data ? JSON.parse(data) : null;
+}
+function setSession(session) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+}
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+// Lấy dữ liệu từ Gist
+async function fetchGist() {
+  try {
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: { 'Authorization': `Bearer ${GITHUB_TOKEN}` }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const content = data.files['data.json'].content;
+    return JSON.parse(content);
+  } catch (err) {
+    console.error('Lỗi đọc Gist:', err);
+    return null;
+  }
+}
+
+// Ghi dữ liệu vào Gist
+async function writeGist(content) {
+  try {
+    const payload = {
+      files: {
+        'data.json': {
+          content: JSON.stringify(content, null, 2)
+        }
+      }
+    };
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return true;
+  } catch (err) {
+    console.error('Lỗi ghi Gist:', err);
+    return false;
+  }
+}
+
+// Hợp nhất dữ liệu từ cloud vào local (không ghi đè)
+function mergeUsers(cloudUsers) {
+  const local = getUsers();
+  let changed = false;
+  for (const [username, data] of Object.entries(cloudUsers)) {
+    if (username === ADMIN_USERNAME) continue;
+    if (!local[username] || local[username].role !== data.role) {
+      local[username] = data;
+      changed = true;
+    }
+  }
+  if (changed) {
+    saveUsers(local);
+    return true;
+  }
+  return false;
+}
+
+// Đồng bộ local lên Gist (ghi đè toàn bộ)
+async function syncToGist() {
+  const users = getUsers();
+  if (!users[ADMIN_USERNAME]) {
+    users[ADMIN_USERNAME] = { password: ADMIN_PASSWORD, role: 'admin' };
+  } else {
+    users[ADMIN_USERNAME].role = 'admin';
+  }
+  const payload = {
+    users: users,
+    lastUpdated: Date.now()
+  };
+  const ok = await writeGist(payload);
+  if (ok) {
+    showToast('☁️ Đã đồng bộ lên Gist');
+    updateStatus('online', 'Đã đồng bộ ' + new Date().toLocaleTimeString());
+    renderTable();
+  } else {
+    showToast('❌ Lỗi đồng bộ Gist', true);
+  }
+}
+
+// Polling: lấy dữ liệu từ Gist mỗi 5s và hợp nhất
+let pollingInterval = null;
+
+async function pollGist() {
+  const cloud = await fetchGist();
+  if (!cloud) {
+    updateStatus('offline', 'Không kết nối được Gist');
+    return;
+  }
+  if (cloud.users) {
+    const changed = mergeUsers(cloud.users);
+    if (changed) {
+      showToast('🔄 Đã cập nhật dữ liệu từ Gist');
+      renderTable();
+    }
+    updateStatus('online', 'Đã cập nhật ' + new Date(cloud.lastUpdated).toLocaleTimeString());
+    // Cập nhật last update
+    document.getElementById('lastUpdate').textContent = '🕐 ' + new Date(cloud.lastUpdated).toLocaleString();
+  }
+}
+
+function startPolling() {
+  if (pollingInterval) clearInterval(pollingInterval);
+  pollGist(); // ngay lập tức
+  pollingInterval = setInterval(pollGist, 5000);
+}
+
+function stopPolling() {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+  }
+}
+
+// ============================================================
+//  UI HELPERS
+// ============================================================
+
+function showToast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = isError ? 'rgba(200,50,50,0.9)' : 'rgba(0,0,0,0.85)';
+  el.classList.add('show');
+  clearTimeout(el._timeout);
+  el._timeout = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function updateStatus(status, msg) {
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'dot ' + status;
+  text.textContent = msg;
+}
+
+function renderTable() {
+  const users = getUsers();
+  const tbody = document.getElementById('userTableBody');
+  const entries = Object.entries(users);
+  document.getElementById('userCount').textContent = '👥 ' + entries.length + ' user';
+
+  if (entries.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:rgba(255,255,255,0.3);">Chưa có dữ liệu</td></tr>';
+    return;
+  }
+
+  const session = getSession();
+  const currentUser = session ? session.username : '';
+
+  tbody.innerHTML = entries.map(([username, data]) => {
+    const isSelf = username === currentUser;
+    const isAdmin = data.role === 'admin';
+    return `
+      <tr>
+        <td>${username} ${isSelf ? '<span style="color:rgba(255,255,255,0.3);font-size:12px;">(bạn)</span>' : ''}</td>
+        <td><span class="role-badge ${isAdmin ? 'admin' : 'user'}">${isAdmin ? 'admin' : 'user'}</span></td>
+        <td class="actions-cell">
+          ${!isAdmin && !isSelf ? `<button class="btn btn-success btn-sm" onclick="promoteUser('${username}')">⬆️ Nâng</button>` : ''}
+          ${isAdmin && !isSelf ? `<button class="btn btn-warning btn-sm" onclick="demoteUser('${username}')">⬇️ Hạ</button>` : ''}
+          ${!isSelf && !isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteUser('${username}')">🗑️ Xóa</button>` : ''}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ============================================================
+//  USER MANAGEMENT ACTIONS
+// ============================================================
+
+async function promoteUser(username) {
+  const users = getUsers();
+  if (!users[username]) return showToast('Không tìm thấy user', true);
+  if (username === ADMIN_USERNAME) return showToast('Không thể nâng admin mặc định', true);
+  users[username].role = 'admin';
+  saveUsers(users);
+  await syncToGist();
+  renderTable();
+  showToast(`✅ Đã nâng ${username} thành admin`);
+}
+
+async function demoteUser(username) {
+  const users = getUsers();
+  if (!users[username]) return showToast('Không tìm thấy user', true);
+  if (username === ADMIN_USERNAME) return showToast('Không thể hạ admin mặc định', true);
+  users[username].role = 'user';
+  saveUsers(users);
+  await syncToGist();
+  renderTable();
+  showToast(`✅ Đã hạ ${username} thành user`);
+}
+
+async function deleteUser(username) {
+  if (username === ADMIN_USERNAME) return showToast('Không thể xóa admin mặc định', true);
+  if (!confirm(`Xóa user "${username}"?`)) return;
+  const users = getUsers();
+  delete users[username];
+  saveUsers(users);
+  await syncToGist();
+  renderTable();
+  showToast(`✅ Đã xóa ${username}`);
+}
+
+// ============================================================
+//  AUTH
+// ============================================================
+
+function login(username, password) {
+  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    setSession({ username, role: 'admin' });
+    return true;
+  }
+  // Ngoài ra, admin có thể đăng nhập bằng tài khoản đã được nâng cấp từ Gist
+  const users = getUsers();
+  const user = users[username];
+  if (user && user.password === password && user.role === 'admin') {
+    setSession({ username, role: 'admin' });
+    return true;
+  }
+  return false;
+}
+
+function logout() {
+  clearSession();
+  location.reload();
+}
+
+function showAdminPanel() {
+  document.getElementById('authSection').classList.add('hidden');
+  document.getElementById('adminPanel').classList.remove('hidden');
+  document.getElementById('logoutBtn').style.display = 'inline-block';
+  renderTable();
+  startPolling();
+}
+
+function showAuth() {
+  document.getElementById('authSection').classList.remove('hidden');
+  document.getElementById('adminPanel').classList.add('hidden');
+  document.getElementById('logoutBtn').style.display = 'none';
+  stopPolling();
+}
+
+// ============================================================
+//  DOM EVENTS
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  const session = getSession();
+  if (session && session.role === 'admin') {
+    showAdminPanel();
+    updateStatus('online', 'Đã đăng nhập');
+  } else {
+    showAuth();
+    updateStatus('offline', 'Vui lòng đăng nhập');
+  }
+
+  // Login
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const username = document.getElementById('loginUser').value.trim();
+    const password = document.getElementById('loginPass').value.trim();
+    const errorEl = document.getElementById('authError');
+    if (!username || !password) {
+      errorEl.textContent = 'Vui lòng nhập đầy đủ';
+      return;
+    }
+    if (login(username, password)) {
+      errorEl.textContent = '';
+      showAdminPanel();
+      updateStatus('online', 'Đã đăng nhập');
+    } else {
+      errorEl.textContent = 'Sai tên đăng nhập hoặc mật khẩu';
+    }
+  });
+
+  // Logout
+  document.getElementById('logoutBtn').addEventListener('click', logout);
+
+  // Sync manual
+  document.getElementById('syncBtn').addEventListener('click', syncToGist);
+  document.getElementById('syncUpBtn').addEventListener('click', syncToGist);
+
+  // Refresh
+  document.getElementById('refreshBtn').addEventListener('click', async () => {
+    await pollGist();
+    showToast('🔄 Đã làm mới dữ liệu');
+  });
+
+  // Export JSON
+  document.getElementById('exportBtn').addEventListener('click', async () => {
+    const users = getUsers();
+    const json = JSON.stringify(users, null, 2);
+    try {
+      await navigator.clipboard.writeText(json);
+      showToast('✅ Đã sao chép JSON vào clipboard');
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = json;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('✅ Đã sao chép (fallback)');
+    }
+  });
+
+  // Import JSON
+  document.getElementById('importBtn').addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const imported = JSON.parse(text);
+      if (typeof imported !== 'object' || Array.isArray(imported)) throw new Error('Dữ liệu không hợp lệ');
+      const current = getUsers();
+      let count = 0;
+      for (const [username, data] of Object.entries(imported)) {
+        if (username === ADMIN_USERNAME) continue;
+        if (!current[username]) {
+          current[username] = data;
+          count++;
+        }
+      }
+      saveUsers(current);
+      await syncToGist();
+      renderTable();
+      showToast(`✅ Đã nhập ${count} user và đồng bộ Gist`);
+    } catch (err) {
+      showToast('❌ Lỗi nhập: ' + err.message, true);
+    }
+  });
+
+  // Enter key for login
+  document.getElementById('loginPass').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('loginBtn').click();
+  });
+  document.getElementById('loginUser').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('loginBtn').click();
+  });
+});
+
+// ============================================================
+//  KIỂM TRA CẤU HÌNH
+// ============================================================
+if (GIST_ID === 'YOUR_GIST_ID' || GITHUB_TOKEN === 'YOUR_GITHUB_TOKEN') {
+  showToast('⚠️ Vui lòng cấu hình GIST_ID và GITHUB_TOKEN trong code', true);
+  updateStatus('offline', 'Chưa cấu hình Gist');
+}
+</script>
 </body>
-</html>
+    </html>

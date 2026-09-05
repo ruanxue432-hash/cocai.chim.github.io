@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APK Translator & Editor</title>
+    <title>Full Auto APK Translator</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d1117; color: #c9d1d9; font-family: monospace; display: flex; height: 100vh; overflow: hidden; }
         
-        #sidebar { width: 320px; background: #161b22; border-right: 1px solid #30363d; display: flex; flex-direction: column; }
+        #sidebar { width: 340px; background: #161b22; border-right: 1px solid #30363d; display: flex; flex-direction: column; }
         #drop-zone { border: 2px dashed #3fb950; margin: 10px; padding: 12px; text-align: center; border-radius: 6px; color: #3fb950; cursor: pointer; }
         #file-list { flex: 1; overflow-y: auto; padding: 8px; }
         .file-item { padding: 5px 8px; cursor: pointer; font-size: 12px; border-radius: 4px; word-break: break-all; }
@@ -16,7 +16,7 @@
         .file-item.active { background: #1f6feb; color: #fff; }
 
         #main-viewer { flex: 1; display: flex; flex-direction: column; background: #0d1117; }
-        #toolbar { padding: 8px 12px; background: #161b22; border-bottom: 1px solid #30363d; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        #toolbar { padding: 10px; background: #161b22; border-bottom: 1px solid #30363d; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         #content { flex: 1; padding: 10px; display: flex; flex-direction: column; overflow: auto; }
         
         textarea { width: 100%; height: 100%; background: #010409; color: #7ee787; border: 1px solid #30363d; padding: 10px; font-family: monospace; font-size: 13px; resize: none; border-radius: 4px; outline: none; }
@@ -26,9 +26,14 @@
         button:hover { background: #2ea043; }
         button.btn-blue { background: #1f6feb; border-color: #388bfd; }
         button.btn-blue:hover { background: #388bfd; }
+        button.btn-purple { background: #8957e5; border-color: #a371f7; }
+        button.btn-purple:hover { background: #a371f7; }
         select { background: #21262d; color: #c9d1d9; border-color: #30363d; }
         
-        .status-msg { font-size: 11px; color: #d29922; margin-left: auto; }
+        /* Progress Bar Styles */
+        #progress-container { width: 100%; background: #21262d; border-radius: 4px; height: 12px; overflow: hidden; display: none; margin-top: 5px; }
+        #progress-bar { width: 0%; height: 100%; background: #3fb950; transition: width 0.2s; }
+        .status-msg { font-size: 11px; color: #d29922; }
     </style>
 </head>
 <body>
@@ -38,9 +43,12 @@
             <strong>Tải / Kéo thả tệp APK vào đây</strong>
             <input type="file" id="file-input" accept=".apk,.zip" style="display: none;">
         </div>
-        <button id="download-btn" class="btn-blue" style="margin: 0 10px 10px 10px; display: none;" onclick="downloadModifiedApk()">
-            💾 Tải APK Đã Sửa / Việt Hóa
-        </button>
+        
+        <div style="padding: 0 10px 10px 10px; display: flex; flex-direction: column; gap: 6px;">
+            <button id="btn-auto-all" class="btn-purple" style="display: none;" onclick="translateAllFiles()">⚡ Dịch Tự Động Toàn Bộ APK</button>
+            <button id="download-btn" class="btn-blue" style="display: none;" onclick="downloadModifiedApk()">💾 Tải APK Đã Dịch</button>
+        </div>
+
         <div id="file-list">Chưa có tệp nào...</div>
     </div>
 
@@ -54,14 +62,17 @@
                 <option value="zh-CN">Sang Tiếng Trung (zh)</option>
             </select>
             
-            <button id="btn-translate" onclick="translateCurrentFile()" style="display: none;">🌐 Dịch Tự Động</button>
+            <button id="btn-translate-single" onclick="translateCurrentFile()" style="display: none;">🌐 Dịch Tệp Này</button>
             <button id="btn-save" onclick="saveCurrentFile()" style="display: none;">📌 Lưu Tệp Này</button>
             
-            <span id="status" class="status-msg"></span>
+            <div style="width: 100%;">
+                <div id="progress-container"><div id="progress-bar"></div></div>
+                <span id="status" class="status-msg"></span>
+            </div>
         </div>
         
         <div id="content">
-            <p style="color: #8b949e;">Mở APK -> Chọn file văn bản (JSON, LUA, TXT...) -> Bấm "Dịch Tự Động" -> Bấm "Lưu Tệp Này" -> Tải APK về.</p>
+            <p style="color: #8b949e;">Mở APK -> Bấm "⚡ Dịch Tự Động Toàn Bộ APK" để hệ thống tự lọc và dịch toàn bộ file ngôn ngữ/text -> Tải APK về.</p>
         </div>
     </div>
 
@@ -76,10 +87,13 @@
         const fileList = document.getElementById('file-list');
         const contentDiv = document.getElementById('content');
         const currentFileSpan = document.getElementById('current-file');
-        const btnTranslate = document.getElementById('btn-translate');
+        const btnTranslateSingle = document.getElementById('btn-translate-single');
+        const btnAutoAll = document.getElementById('btn-auto-all');
         const btnSave = document.getElementById('btn-save');
         const btnDownload = document.getElementById('download-btn');
         const statusSpan = document.getElementById('status');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
 
         fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
         dropZone.addEventListener('dragover', (e) => e.preventDefault());
@@ -99,6 +113,7 @@
                 loadedZip = await zip.loadAsync(file);
                 fileList.innerHTML = "";
                 btnDownload.style.display = "block";
+                btnAutoAll.style.display = "block";
 
                 loadedZip.forEach((relativePath, zipEntry) => {
                     if (!zipEntry.dir) {
@@ -124,66 +139,108 @@
 
             const ext = path.split('.').pop().toLowerCase();
 
-            // Hiển thị hình ảnh
             if (['png', 'jpg', 'jpeg', 'webp', 'gif'].includes(ext)) {
-                btnTranslate.style.display = "none";
+                btnTranslateSingle.style.display = "none";
                 btnSave.style.display = "none";
                 const blob = await entry.async('blob');
                 const url = URL.createObjectURL(blob);
                 contentDiv.innerHTML = `<img src="${url}" alt="${path}">`;
-            } 
-            // File văn bản có thể sửa / dịch
-            else {
-                btnTranslate.style.display = "inline-block";
+            } else {
+                btnTranslateSingle.style.display = "inline-block";
                 btnSave.style.display = "inline-block";
                 const text = await entry.async('text');
                 contentDiv.innerHTML = `<textarea id="text-editor">${escapeHtml(text)}</textarea>`;
             }
         }
 
-        // Chức năng Dịch Văn Bản qua Google Translate Free API
+        // Hàm gọi API dịch văn bản
+        async function fetchTranslation(text, targetLang) {
+            if (!text.trim()) return text;
+            const chunks = text.match(/[\s\S]{1,1500}/g) || [text];
+            let result = "";
+
+            for (let chunk of chunks) {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(chunk)}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data && data[0]) {
+                    data[0].forEach(item => { if (item[0]) result += item[0]; });
+                }
+            }
+            return result;
+        }
+
+        // Dịch file đơn lẻ
         async function translateCurrentFile() {
             const editor = document.getElementById('text-editor');
-            if (!editor || !editor.value.trim()) return alert("Không có nội dung văn bản để dịch!");
+            if (!editor || !editor.value.trim()) return alert("Không có nội dung để dịch!");
 
             const targetLang = document.getElementById('target-lang').value;
-            statusSpan.innerText = "Đang dịch tự động...";
+            statusSpan.innerText = "Đang dịch tệp hiện tại...";
 
             try {
-                const sourceText = editor.value;
-                // Chia nhỏ nếu văn bản quá dài để tránh vượt giới hạn URL
-                const chunks = sourceText.match(/[\s\S]{1,1500}/g) || [sourceText];
-                let translatedFull = "";
-
-                for (let chunk of chunks) {
-                    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(chunk)}`;
-                    const res = await fetch(url);
-                    const data = await res.json();
-                    
-                    if (data && data[0]) {
-                        data[0].forEach(item => {
-                            if (item[0]) translatedFull += item[0];
-                        });
-                    }
-                }
-
-                editor.value = translatedFull;
-                statusSpan.innerText = "Dịch xong! Hãy bấm 'Lưu Tệp Này' để cập nhật.";
+                editor.value = await fetchTranslation(editor.value, targetLang);
+                statusSpan.innerText = "Dịch xong! Bấm 'Lưu Tệp Này' để cập nhật.";
             } catch (err) {
                 statusSpan.innerText = "Lỗi dịch: " + err.message;
             }
         }
 
-        // Lưu nội dung từ Textarea vào Zip tạm
+        // DỊCH TỰ ĐỘNG TOÀN BỘ FILE VĂN BẢN TRONG APK
+        async function translateAllFiles() {
+            if (!loadedZip) return;
+            const targetLang = document.getElementById('target-lang').value;
+            
+            // Các định dạng file văn bản sẽ được quét để dịch
+            const validExts = ['json', 'lua', 'txt', 'js', 'xml', 'properties', 'html', 'css', 'ini'];
+            const targets = [];
+
+            loadedZip.forEach((relativePath, zipEntry) => {
+                const ext = relativePath.split('.').pop().toLowerCase();
+                if (!zipEntry.dir && validExts.includes(ext)) {
+                    targets.push({ path: relativePath, entry: zipEntry });
+                }
+            });
+
+            if (targets.length === 0) return alert("Không tìm thấy file văn bản phù hợp để dịch!");
+            if (!confirm(`Tìm thấy ${targets.length} file văn bản. Bạn có muốn dịch toàn bộ sang ${targetLang.toUpperCase()} không?`)) return;
+
+            progressContainer.style.display = "block";
+            btnAutoAll.disabled = true;
+            let completed = 0;
+
+            for (let item of targets) {
+                statusSpan.innerText = `[${completed + 1}/${targets.length}] Đang dịch: ${item.path}`;
+                try {
+                    const originalText = await item.entry.async('text');
+                    if (originalText.trim().length > 0) {
+                        const translatedText = await fetchTranslation(originalText, targetLang);
+                        loadedZip.file(item.path, translatedText);
+                    }
+                } catch (e) {
+                    console.error("Lỗi dịch file " + item.path, e);
+                }
+
+                completed++;
+                const percent = Math.round((completed / targets.length) * 100);
+                progressBar.style.width = percent + "%";
+                
+                // Nghỉ 300ms giữa các request để tránh bị Google chặn API
+                await new Promise(r => setTimeout(r, 300));
+            }
+
+            statusSpan.innerText = "🎉 ĐÃ DỊCH HOÀN TẤT TOÀN BỘ FILE! Bạn có thể bấm Tải APK về.";
+            btnAutoAll.disabled = false;
+        }
+
         function saveCurrentFile() {
             const editor = document.getElementById('text-editor');
             if (!editor || !activePath || !loadedZip) return;
 
             loadedZip.file(activePath, editor.value);
-            statusSpan.innerText = "✅ Đã lưu file vào bộ nhớ APK!";
+            statusSpan.innerText = "✅ Đã lưu file!";
         }
 
-        // Tải APK đã được sửa về máy
         async function downloadModifiedApk() {
             if (!loadedZip) return;
             statusSpan.innerText = "Đang đóng gói APK...";
@@ -193,7 +250,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = "Viethoa_" + originalFileName;
+                a.download = "AutoTranslated_" + originalFileName;
                 a.click();
                 statusSpan.innerText = "🚀 Tải APK thành công!";
             } catch (err) {

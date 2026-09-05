@@ -3,691 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web trung gian - Quản trị</title>
+    <title>APK Translator & Editor</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #0b0b1a;
-            color: #fff;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .container {
-            max-width: 950px;
-            width: 100%;
-            background: rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-        }
-        h1 { color: #ff0050; margin-bottom: 8px; }
-        .sub { color: rgba(255,255,255,0.4); margin-bottom: 20px; }
-        .status-bar {
-            background: rgba(255,255,255,0.05);
-            padding: 12px 18px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            color: #fff;
-            transition: 0.3s;
-        }
-        .btn-primary { background: #ff0050; }
-        .btn-primary:hover { opacity: 0.8; }
-        .btn-success { background: #00c851; }
-        .btn-success:hover { opacity: 0.8; }
-        .btn-danger { background: #ff4444; }
-        .btn-danger:hover { opacity: 0.8; }
-        .btn-outline { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
-        .btn-outline:hover { background: rgba(255,255,255,0.2); }
-        .btn-sm { padding: 4px 12px; font-size: 12px; }
-        input, textarea, select {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            margin-bottom: 10px;
-        }
-        input:focus, textarea:focus, select:focus { border-color: #ff0050; }
-        select option { background: #1a1a2e; }
-        .hidden { display: none !important; }
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.85);
-            color: #fff;
-            padding: 12px 28px;
-            border-radius: 40px;
-            font-size: 14px;
-            z-index: 999;
-            opacity: 0;
-            transition: 0.3s;
-            pointer-events: none;
-        }
-        .toast.show { opacity: 1; }
-        .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        .tab {
-            padding: 8px 18px;
-            border-radius: 30px;
-            background: transparent;
-            color: rgba(255,255,255,0.5);
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .tab.active { background: rgba(255,255,255,0.08); color: #fff; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .user-table { width: 100%; border-collapse: collapse; }
-        .user-table th, .user-table td {
-            padding: 10px 14px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .user-table th { color: rgba(255,255,255,0.4); font-size: 13px; }
-        .role-badge {
-            padding: 2px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .role-badge.admin { background: #f5576c; color: #fff; }
-        .role-badge.user { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.6); }
-        .message-item {
-            background: rgba(255,255,255,0.04);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            border-left: 3px solid transparent;
-        }
-        .message-item.unread { border-left-color: #ff0050; background: rgba(255,0,80,0.06); }
-        .message-item .msg-header {
-            display: flex;
-            justify-content: space-between;
-            color: rgba(255,255,255,0.5);
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-        .message-item .msg-content { color: #fff; }
-        .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
-        .footer-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        .auth-box { max-width: 400px; margin: 40px auto; }
-        .auth-box input { margin-bottom: 12px; }
-        .secret-info {
-            background: rgba(0,255,100,0.05);
-            border: 1px solid rgba(0,255,100,0.15);
-            border-radius: 12px;
-            padding: 10px 16px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-        }
-        .secret-info strong { color: #69db7c; }
-        @media (max-width: 600px) {
-            .container { padding: 16px; }
-            .user-table th, .user-table td { padding: 6px 8px; font-size: 13px; }
-            .tabs { flex-wrap: wrap; }
-            .tab { flex: 1; text-align: center; font-size: 13px; padding: 6px 12px; }
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0d1117; color: #c9d1d9; font-family: monospace; display: flex; height: 100vh; overflow: hidden; }
+        
+        #sidebar { width: 320px; background: #161b22; border-right: 1px solid #30363d; display: flex; flex-direction: column; }
+        #drop-zone { border: 2px dashed #3fb950; margin: 10px; padding: 12px; text-align: center; border-radius: 6px; color: #3fb950; cursor: pointer; }
+        #file-list { flex: 1; overflow-y: auto; padding: 8px; }
+        .file-item { padding: 5px 8px; cursor: pointer; font-size: 12px; border-radius: 4px; word-break: break-all; }
+        .file-item:hover { background: #21262d; color: #58a6ff; }
+        .file-item.active { background: #1f6feb; color: #fff; }
+
+        #main-viewer { flex: 1; display: flex; flex-direction: column; background: #0d1117; }
+        #toolbar { padding: 8px 12px; background: #161b22; border-bottom: 1px solid #30363d; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        #content { flex: 1; padding: 10px; display: flex; flex-direction: column; overflow: auto; }
+        
+        textarea { width: 100%; height: 100%; background: #010409; color: #7ee787; border: 1px solid #30363d; padding: 10px; font-family: monospace; font-size: 13px; resize: none; border-radius: 4px; outline: none; }
+        img { max-width: 100%; max-height: 80vh; border: 1px solid #30363d; padding: 5px; background: #010409; align-self: center; }
+        
+        button, select { background: #238636; color: #fff; border: 1px solid #2ea043; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-family: monospace; font-size: 12px; }
+        button:hover { background: #2ea043; }
+        button.btn-blue { background: #1f6feb; border-color: #388bfd; }
+        button.btn-blue:hover { background: #388bfd; }
+        select { background: #21262d; color: #c9d1d9; border-color: #30363d; }
+        
+        .status-msg { font-size: 11px; color: #d29922; margin-left: auto; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>🎵 Web trung gian</h1>
-        <div class="sub">Quản trị TikTok – Đồng bộ qua GitHub Gist</div>
-
-        <div class="status-bar">
-            <span id="statusText">🔴 Đang kết nối...</span>
-            <span>
-                <button id="testBtn" class="btn btn-outline btn-sm">🔍 Kiểm tra</button>
-                <button id="logoutBtn" class="btn btn-outline btn-sm hidden">🚪 Đăng xuất</button>
-            </span>
+    <div id="sidebar">
+        <div id="drop-zone" onclick="document.getElementById('file-input').click()">
+            <strong>Tải / Kéo thả tệp APK vào đây</strong>
+            <input type="file" id="file-input" accept=".apk,.zip" style="display: none;">
         </div>
+        <button id="download-btn" class="btn-blue" style="margin: 0 10px 10px 10px; display: none;" onclick="downloadModifiedApk()">
+            💾 Tải APK Đã Sửa / Việt Hóa
+        </button>
+        <div id="file-list">Chưa có tệp nào...</div>
+    </div>
 
-        <div id="authSection" class="auth-box">
-            <h3 style="margin-bottom:12px;">🔐 Đăng nhập</h3>
-            <input type="text" id="loginUser" placeholder="Tên" value="admin" />
-            <input type="password" id="loginPass" placeholder="Mật khẩu" value="admin123" />
-            <div id="authError" style="color:#ff6b6b;font-size:14px;min-height:20px;"></div>
-            <button id="loginBtn" class="btn btn-primary" style="width:100%;padding:12px;">Đăng nhập</button>
+    <div id="main-viewer">
+        <div id="toolbar">
+            <span id="current-file" style="color: #58a6ff; font-weight: bold;">Chưa chọn tệp</span>
+            
+            <select id="target-lang">
+                <option value="vi">Sang Tiếng Việt (vi)</option>
+                <option value="en">Sang Tiếng Anh (en)</option>
+                <option value="zh-CN">Sang Tiếng Trung (zh)</option>
+            </select>
+            
+            <button id="btn-translate" onclick="translateCurrentFile()" style="display: none;">🌐 Dịch Tự Động</button>
+            <button id="btn-save" onclick="saveCurrentFile()" style="display: none;">📌 Lưu Tệp Này</button>
+            
+            <span id="status" class="status-msg"></span>
         </div>
-
-        <div id="adminPanel" class="hidden">
-            <div class="secret-info">
-                🔑 <strong>Xác thực:</strong> Web trung gian chỉ chấp nhận dữ liệu từ web chính có cùng Secret Key.
-            </div>
-            <div class="tabs">
-                <button class="tab active" data-tab="users">👥 Users</button>
-                <button class="tab" data-tab="compose">✉️ Gửi thư</button>
-                <button class="tab" data-tab="inbox">📩 Inbox</button>
-            </div>
-
-            <div id="tab-users" class="tab-content active">
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-                    <button id="syncBtn" class="btn btn-primary btn-sm">☁️ Đồng bộ</button>
-                    <button id="refreshBtn" class="btn btn-outline btn-sm">🔄 Làm mới</button>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table class="user-table">
-                        <thead><tr><th>Tên</th><th>Role</th><th>Thao tác</th></tr></thead>
-                        <tbody id="userTableBody">
-                            <tr><td colspan="3" style="text-align:center;color:rgba(255,255,255,0.3);">Chưa có dữ liệu</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="tab-compose" class="tab-content">
-                <h3 style="margin-bottom:10px;">✉️ Gửi thư</h3>
-                <select id="recipientSelect"><option value="">-- Chọn người nhận --</option></select>
-                <textarea id="messageContent" placeholder="Nội dung tin nhắn..." rows="3"></textarea>
-                <label style="color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                    <input type="checkbox" id="inviteAdmin" /> 📌 Gửi lời mời làm admin
-                </label>
-                <button id="sendMsgBtn" class="btn btn-primary">📤 Gửi thư</button>
-                <div id="composeResult" style="margin-top:8px;color:rgba(255,255,255,0.6);"></div>
-            </div>
-
-            <div id="tab-inbox" class="tab-content">
-                <h3 style="margin-bottom:10px;">📩 Hộp thư đến</h3>
-                <div id="inboxList"></div>
-            </div>
-
-            <div class="footer-actions">
-                <button id="exportBtn" class="btn btn-outline btn-sm">📋 Xuất JSON</button>
-                <button id="importBtn" class="btn btn-outline btn-sm">📥 Nhập JSON</button>
-                <button id="syncUpBtn" class="btn btn-success btn-sm">☁️ Đồng bộ thủ công</button>
-            </div>
+        
+        <div id="content">
+            <p style="color: #8b949e;">Mở APK -> Chọn file văn bản (JSON, LUA, TXT...) -> Bấm "Dịch Tự Động" -> Bấm "Lưu Tệp Này" -> Tải APK về.</p>
         </div>
     </div>
 
-    <div id="toast" class="toast"></div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
-        // ============================================================
-        //  👇 CẤU HÌNH (THAY TOKEN CỦA BẠN)
-        // ============================================================
-        const GIST_ID = 'a5fc09ae4bbd3f069e2bb08a3102d5ba';
-        const GITHUB_TOKEN = ' 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'; // ← Dán token GitHub vào đây
-        const SECRET_KEY = 'mySuperSecretKey123'; // ← Đổi thành key bí mật của bạn
-        // ============================================================
+        let loadedZip = null;
+        let activePath = null;
+        let originalFileName = "modified.apk";
 
-        const GIST_URL = `https://api.github.com/gists/${GIST_ID}`;
-        const HEADERS = {
-            'Authorization': `Bearer ${GITHUB_TOKEN}`,
-            'Accept': 'application/json'
-        };
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const fileList = document.getElementById('file-list');
+        const contentDiv = document.getElementById('content');
+        const currentFileSpan = document.getElementById('current-file');
+        const btnTranslate = document.getElementById('btn-translate');
+        const btnSave = document.getElementById('btn-save');
+        const btnDownload = document.getElementById('download-btn');
+        const statusSpan = document.getElementById('status');
 
-        const ADMIN_USERNAME = 'admin';
-        const ADMIN_PASSWORD = 'admin123';
-
-        const USERS_KEY = 'tiktok_users';
-        const SESSION_KEY = 'tiktok_session';
-
-        function getUsers() {
-            const data = localStorage.getItem(USERS_KEY);
-            return data ? JSON.parse(data) : {};
-        }
-        function saveUsers(users) {
-            localStorage.setItem(USERS_KEY, JSON.stringify(users));
-        }
-        function getSession() {
-            const data = localStorage.getItem(SESSION_KEY);
-            return data ? JSON.parse(data) : null;
-        }
-        function setSession(s) {
-            localStorage.setItem(SESSION_KEY, JSON.stringify(s));
-        }
-        function clearSession() {
-            localStorage.removeItem(SESSION_KEY);
-        }
-
-        async function fetchGist() {
-            const res = await fetch(GIST_URL, { headers: HEADERS });
-            if (!res.ok) {
-                const err = await res.json().catch(() => ({}));
-                throw new Error(`HTTP ${res.status}: ${err.message || res.statusText}`);
-            }
-            const data = await res.json();
-            const content = data.files['data.json'].content;
-            return JSON.parse(content);
-        }
-
-        async function updateGist(content) {
-            const payload = {
-                files: {
-                    'data.json': {
-                        content: JSON.stringify(content, null, 2)
-                    }
-                }
-            };
-            const res = await fetch(GIST_URL, {
-                method: 'PATCH',
-                headers: { ...HEADERS, 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!res.ok) {
-                const err = await res.json().catch(() => ({}));
-                throw new Error(`HTTP ${res.status}: ${err.message || res.statusText}`);
-            }
-            return true;
-        }
-
-        let cachedData = null;
-
-        async function syncToGist() {
-            const users = getUsers();
-            if (!users[ADMIN_USERNAME]) {
-                users[ADMIN_USERNAME] = { password: ADMIN_PASSWORD, role: 'admin' };
-            } else {
-                users[ADMIN_USERNAME].role = 'admin';
-            }
-            const payload = {
-                users: users,
-                messages: cachedData?.messages || [],
-                lastUpdated: Date.now(),
-                _secret: SECRET_KEY
-            };
-            await updateGist(payload);
-            cachedData = payload;
-            showToast('☁️ Đồng bộ thành công!');
-            updateStatus('🟢 Đã đồng bộ ' + new Date().toLocaleTimeString());
-        }
-
-        async function fetchAndMerge() {
-            try {
-                const data = await fetchGist();
-                if (data._secret !== SECRET_KEY) {
-                    showToast('⚠️ Dữ liệu không xác thực! Secret không khớp.', true);
-                    updateStatus('🔴 Lỗi xác thực: sai secret');
-                    return null;
-                }
-                cachedData = data;
-                if (!data.users) data.users = {};
-                if (!data.messages) data.messages = [];
-
-                const localUsers = getUsers();
-                let changed = false;
-                for (const [username, info] of Object.entries(data.users)) {
-                    if (username === ADMIN_USERNAME) continue;
-                    if (!localUsers[username] || localUsers[username].role !== info.role) {
-                        localUsers[username] = info;
-                        changed = true;
-                    }
-                }
-                if (changed) {
-                    saveUsers(localUsers);
-                    showToast('🔄 Đã cập nhật dữ liệu user');
-                }
-                renderUsers();
-                updateStatus('🟢 Cập nhật lúc ' + new Date().toLocaleTimeString());
-                return data;
-            } catch (err) {
-                updateStatus('🔴 Lỗi: ' + err.message);
-                showToast('❌ ' + err.message, true);
-                return null;
-            }
-        }
-
-        function renderUsers() {
-            const users = getUsers();
-            const tbody = document.getElementById('userTableBody');
-            const entries = Object.entries(users);
-            if (entries.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:rgba(255,255,255,0.3);">Chưa có dữ liệu</td></tr>';
-                return;
-            }
-            const session = getSession();
-            const currentUser = session ? session.username : '';
-            tbody.innerHTML = entries.map(([username, data]) => {
-                const isSelf = username === currentUser;
-                const isAdmin = data.role === 'admin';
-                return `
-                    <tr>
-                        <td>${username} ${isSelf ? '👤' : ''}</td>
-                        <td><span class="role-badge ${isAdmin ? 'admin' : 'user'}">${isAdmin ? 'admin' : 'user'}</span></td>
-                        <td class="actions-cell">
-                            ${!isAdmin && !isSelf ? `<button class="btn btn-success btn-sm" onclick="promoteUser('${username}')">⬆️ Nâng</button>` : ''}
-                            ${isAdmin && !isSelf ? `<button class="btn btn-danger btn-sm" onclick="demoteUser('${username}')">⬇️ Hạ</button>` : ''}
-                            ${!isSelf ? `<button class="btn btn-danger btn-sm" onclick="deleteUser('${username}')">🗑️</button>` : ''}
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-            populateRecipients();
-        }
-
-        function populateRecipients() {
-            const select = document.getElementById('recipientSelect');
-            const users = getUsers();
-            const session = getSession();
-            const currentUser = session ? session.username : '';
-            select.innerHTML = '<option value="">-- Chọn người nhận --</option>';
-            for (const [name] of Object.entries(users)) {
-                if (name !== currentUser && name !== ADMIN_USERNAME) {
-                    select.innerHTML += `<option value="${name}">${name}</option>`;
-                }
-            }
-        }
-
-        function renderInbox() {
-            const session = getSession();
-            if (!session || !cachedData) return;
-            const msgs = cachedData.messages.filter(m => m.to === session.username);
-            const container = document.getElementById('inboxList');
-            if (msgs.length === 0) {
-                container.innerHTML = '<p style="color:rgba(255,255,255,0.3);">📭 Hộp thư trống</p>';
-                return;
-            }
-            container.innerHTML = msgs.sort((a, b) => b.timestamp - a.timestamp).map(msg => {
-                const isUnread = msg.status === 'unread';
-                const isInvite = msg.type === 'invite_admin';
-                const date = new Date(msg.timestamp).toLocaleString();
-                return `
-                    <div class="message-item ${isUnread ? 'unread' : ''}">
-                        <div class="msg-header"><span>Từ: <strong>${msg.from}</strong></span><span>${date}</span></div>
-                        <div class="msg-content">${msg.content}</div>
-                        <div style="margin-top:6px;display:flex;gap:8px;">
-                            ${isUnread ? `<button class="btn btn-outline btn-sm" onclick="markRead('${msg.id}')">📖 Đã đọc</button>` : ''}
-                            ${isInvite && isUnread ? `<button class="btn btn-success btn-sm" onclick="acceptInvite('${msg.from}')">✅ Chấp nhận admin</button>` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.promoteUser = async function(username) {
-            const users = getUsers();
-            if (!users[username]) return showToast('Không tìm thấy user', true);
-            users[username].role = 'admin';
-            saveUsers(users);
-            await syncToGist();
-            renderUsers();
-            showToast(`✅ Đã nâng ${username} thành admin`);
-        };
-
-        window.demoteUser = async function(username) {
-            const users = getUsers();
-            if (!users[username]) return showToast('Không tìm thấy user', true);
-            users[username].role = 'user';
-            saveUsers(users);
-            await syncToGist();
-            renderUsers();
-            showToast(`✅ Đã hạ ${username} thành user`);
-        };
-
-        window.deleteUser = async function(username) {
-            if (username === ADMIN_USERNAME) return showToast('Không thể xóa admin', true);
-            if (!confirm(`Xóa "${username}"?`)) return;
-            const users = getUsers();
-            delete users[username];
-            saveUsers(users);
-            await syncToGist();
-            renderUsers();
-            showToast(`✅ Đã xóa ${username}`);
-        };
-
-        window.markRead = async function(msgId) {
-            if (!cachedData) return;
-            const msg = cachedData.messages.find(m => m.id === msgId);
-            if (msg) {
-                msg.status = 'read';
-                await updateGist(cachedData);
-                renderInbox();
-                showToast('✅ Đã đánh dấu đã đọc');
-            }
-        };
-
-        window.acceptInvite = async function(fromUser) {
-            try {
-                const users = getUsers();
-                if (!users[fromUser]) return showToast('Không tìm thấy user', true);
-                users[fromUser].role = 'admin';
-                saveUsers(users);
-                for (const msg of cachedData.messages) {
-                    if (msg.from === fromUser && msg.type === 'invite_admin' && msg.to === getSession().username) {
-                        msg.status = 'read';
-                    }
-                }
-                await updateGist(cachedData);
-                showToast(`✅ Bạn đã trở thành admin!`);
-                renderUsers();
-                renderInbox();
-                setTimeout(() => location.reload(), 1000);
-            } catch (err) {
-                showToast('❌ ' + err.message, true);
-            }
-        };
-
-        document.getElementById('sendMsgBtn').addEventListener('click', async function() {
-            const to = document.getElementById('recipientSelect').value;
-            const content = document.getElementById('messageContent').value.trim();
-            const isInvite = document.getElementById('inviteAdmin').checked;
-            if (!to) return showToast('Chọn người nhận', true);
-            if (!content) return showToast('Nhập nội dung', true);
-            const session = getSession();
-            if (!session) return showToast('Chưa đăng nhập', true);
-            try {
-                const data = await fetchGist();
-                if (!data.messages) data.messages = [];
-                data.messages.push({
-                    id: Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-                    from: session.username,
-                    to: to,
-                    content: content,
-                    type: isInvite ? 'invite_admin' : 'normal',
-                    status: 'unread',
-                    timestamp: Date.now()
-                });
-                data.lastUpdated = Date.now();
-                data._secret = SECRET_KEY;
-                await updateGist(data);
-                cachedData = data;
-                showToast('✅ Đã gửi thư!');
-                document.getElementById('messageContent').value = '';
-                document.getElementById('inviteAdmin').checked = false;
-                renderInbox();
-            } catch (err) {
-                showToast('❌ ' + err.message, true);
-            }
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        dropZone.addEventListener('dragover', (e) => e.preventDefault());
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
         });
 
-        function login(username, password) {
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                setSession({ username, role: 'admin' });
-                return true;
-            }
-            const users = getUsers();
-            const user = users[username];
-            if (user && user.password === password && user.role === 'admin') {
-                setSession({ username, role: 'admin' });
-                return true;
-            }
-            return false;
-        }
-
-        function logout() {
-            clearSession();
-            location.reload();
-        }
-
-        function showAdminPanel() {
-            document.getElementById('authSection').classList.add('hidden');
-            document.getElementById('adminPanel').classList.remove('hidden');
-            document.getElementById('logoutBtn').classList.remove('hidden');
-            renderUsers();
-            fetchAndMerge().then(() => {
-                renderInbox();
-                startPolling();
-            });
-        }
-
-        let pollInterval = null;
-        function startPolling() {
-            if (pollInterval) clearInterval(pollInterval);
-            pollInterval = setInterval(async () => {
-                await fetchAndMerge();
-                renderInbox();
-            }, 5000);
-        }
-
-        function updateStatus(msg) {
-            document.getElementById('statusText').textContent = msg;
-        }
-
-        function showToast(msg, isError = false) {
-            const el = document.getElementById('toast');
-            el.textContent = msg;
-            el.style.background = isError ? 'rgba(200,50,50,0.9)' : 'rgba(0,0,0,0.85)';
-            el.classList.add('show');
-            clearTimeout(el._timeout);
-            el._timeout = setTimeout(() => el.classList.remove('show'), 3000);
-        }
-
-        async function testConnection() {
+        async function handleFile(file) {
+            if (!file) return;
+            originalFileName = file.name;
+            fileList.innerHTML = "Đang đọc APK...";
+            statusSpan.innerText = "";
+            
             try {
-                const data = await fetchGist();
-                if (data._secret !== SECRET_KEY) {
-                    showToast('⚠️ Dữ liệu không xác thực! Secret không khớp.', true);
-                    return false;
-                }
-                showToast('✅ Kết nối Gist thành công! Dữ liệu hợp lệ.');
-                updateStatus('🟢 Kết nối OK');
-                return true;
+                const zip = new JSZip();
+                loadedZip = await zip.loadAsync(file);
+                fileList.innerHTML = "";
+                btnDownload.style.display = "block";
+
+                loadedZip.forEach((relativePath, zipEntry) => {
+                    if (!zipEntry.dir) {
+                        const item = document.createElement('div');
+                        item.className = 'file-item';
+                        item.innerText = relativePath;
+                        item.onclick = () => viewFile(relativePath, zipEntry, item);
+                        fileList.appendChild(item);
+                    }
+                });
             } catch (err) {
-                showToast('❌ Lỗi: ' + err.message, true);
-                updateStatus('🔴 Lỗi: ' + err.message);
-                return false;
+                fileList.innerHTML = "<span style='color:#f85149'>Lỗi đọc APK: " + err.message + "</span>";
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const session = getSession();
-            if (session && session.role === 'admin') {
-                showAdminPanel();
-                updateStatus('🟢 Đã đăng nhập');
-            } else {
-                updateStatus('🔴 Vui lòng đăng nhập');
+        async function viewFile(path, entry, element) {
+            activePath = path;
+            currentFileSpan.innerText = path;
+            statusSpan.innerText = "";
+            
+            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+            if(element) element.classList.add('active');
+
+            const ext = path.split('.').pop().toLowerCase();
+
+            // Hiển thị hình ảnh
+            if (['png', 'jpg', 'jpeg', 'webp', 'gif'].includes(ext)) {
+                btnTranslate.style.display = "none";
+                btnSave.style.display = "none";
+                const blob = await entry.async('blob');
+                const url = URL.createObjectURL(blob);
+                contentDiv.innerHTML = `<img src="${url}" alt="${path}">`;
+            } 
+            // File văn bản có thể sửa / dịch
+            else {
+                btnTranslate.style.display = "inline-block";
+                btnSave.style.display = "inline-block";
+                const text = await entry.async('text');
+                contentDiv.innerHTML = `<textarea id="text-editor">${escapeHtml(text)}</textarea>`;
             }
+        }
 
-            document.getElementById('loginBtn').addEventListener('click', function() {
-                const username = document.getElementById('loginUser').value.trim();
-                const password = document.getElementById('loginPass').value.trim();
-                const errEl = document.getElementById('authError');
-                if (!username || !password) {
-                    errEl.textContent = 'Vui lòng nhập đầy đủ';
-                    return;
-                }
-                if (login(username, password)) {
-                    errEl.textContent = '';
-                    showAdminPanel();
-                    updateStatus('🟢 Đã đăng nhập');
-                } else {
-                    errEl.textContent = 'Sai tên hoặc mật khẩu';
-                }
-            });
+        // Chức năng Dịch Văn Bản qua Google Translate Free API
+        async function translateCurrentFile() {
+            const editor = document.getElementById('text-editor');
+            if (!editor || !editor.value.trim()) return alert("Không có nội dung văn bản để dịch!");
 
-            document.getElementById('logoutBtn').addEventListener('click', logout);
+            const targetLang = document.getElementById('target-lang').value;
+            statusSpan.innerText = "Đang dịch tự động...";
 
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    const target = this.dataset.tab;
-                    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-                    document.getElementById('tab-' + target).classList.add('active');
-                    if (target === 'inbox') renderInbox();
-                });
-            });
+            try {
+                const sourceText = editor.value;
+                // Chia nhỏ nếu văn bản quá dài để tránh vượt giới hạn URL
+                const chunks = sourceText.match(/[\s\S]{1,1500}/g) || [sourceText];
+                let translatedFull = "";
 
-            document.getElementById('syncBtn').addEventListener('click', async () => {
-                await syncToGist();
-                renderUsers();
-            });
-            document.getElementById('syncUpBtn').addEventListener('click', async () => {
-                await syncToGist();
-                renderUsers();
-            });
-            document.getElementById('refreshBtn').addEventListener('click', async () => {
-                await fetchAndMerge();
-                renderInbox();
-                showToast('🔄 Đã làm mới');
-            });
-            document.getElementById('testBtn').addEventListener('click', testConnection);
-
-            document.getElementById('exportBtn').addEventListener('click', async () => {
-                const data = await fetchGist();
-                const json = JSON.stringify(data, null, 2);
-                try {
-                    await navigator.clipboard.writeText(json);
-                    showToast('✅ Đã sao chép JSON');
-                } catch {
-                    const ta = document.createElement('textarea');
-                    ta.value = json;
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(ta);
-                    showToast('✅ Đã sao chép (fallback)');
-                }
-            });
-
-            document.getElementById('importBtn').addEventListener('click', async () => {
-                try {
-                    const text = await navigator.clipboard.readText();
-                    const imported = JSON.parse(text);
-                    if (!imported.users || !imported.messages) throw new Error('Invalid');
-                    if (imported._secret !== SECRET_KEY) {
-                        showToast('⚠️ Dữ liệu không xác thực! Secret không khớp.', true);
-                        return;
+                for (let chunk of chunks) {
+                    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(chunk)}`;
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    
+                    if (data && data[0]) {
+                        data[0].forEach(item => {
+                            if (item[0]) translatedFull += item[0];
+                        });
                     }
-                    const current = getUsers();
-                    let count = 0;
-                    for (const [name, info] of Object.entries(imported.users)) {
-                        if (name === ADMIN_USERNAME) continue;
-                        if (!current[name]) { current[name] = info; count++; }
-                    }
-                    saveUsers(current);
-                    await syncToGist();
-                    renderUsers();
-                    showToast(`✅ Đã nhập ${count} user`);
-                } catch (err) {
-                    showToast('❌ Lỗi: ' + err.message, true);
                 }
-            });
 
-            document.getElementById('loginPass').addEventListener('keydown', e => {
-                if (e.key === 'Enter') document.getElementById('loginBtn').click();
-            });
-        });
+                editor.value = translatedFull;
+                statusSpan.innerText = "Dịch xong! Hãy bấm 'Lưu Tệp Này' để cập nhật.";
+            } catch (err) {
+                statusSpan.innerText = "Lỗi dịch: " + err.message;
+            }
+        }
+
+        // Lưu nội dung từ Textarea vào Zip tạm
+        function saveCurrentFile() {
+            const editor = document.getElementById('text-editor');
+            if (!editor || !activePath || !loadedZip) return;
+
+            loadedZip.file(activePath, editor.value);
+            statusSpan.innerText = "✅ Đã lưu file vào bộ nhớ APK!";
+        }
+
+        // Tải APK đã được sửa về máy
+        async function downloadModifiedApk() {
+            if (!loadedZip) return;
+            statusSpan.innerText = "Đang đóng gói APK...";
+
+            try {
+                const blob = await loadedZip.generateAsync({ type: "blob" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = "Viethoa_" + originalFileName;
+                a.click();
+                statusSpan.innerText = "🚀 Tải APK thành công!";
+            } catch (err) {
+                statusSpan.innerText = "Lỗi xuất APK: " + err.message;
+            }
+        }
+
+        function escapeHtml(string) {
+            return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
     </script>
 </body>
-    </html>
+</html>

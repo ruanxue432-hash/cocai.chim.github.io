@@ -2,97 +2,75 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>TikTok Live Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Link APK / ZIP Telegram</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #121212; color: #fff; margin: 20px; }
-        .box { background: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
-        input, button { padding: 8px 12px; margin: 5px; border-radius: 4px; border: none; }
-        input { background: #2a2a2a; color: #fff; border: 1px solid #444; }
-        button { background: #fe2c55; color: white; cursor: pointer; font-weight: bold; }
-        button:hover { background: #e0264b; }
-        .stream-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
-        .card { background: #252525; border-radius: 8px; padding: 12px; position: relative; border: 1px solid #3d3d3d; }
-        .chest { background: #ffd700; color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; display: inline-block; margin-top: 5px; }
-        .req { color: #ff4d4d; font-size: 11px; margin-top: 4px; }
-        .blocked { border: 1px solid #ff4d4d; opacity: 0.4; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .card { background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; max-width: 500px; text-align: center; border: 1px solid #334155; }
+        h2 { margin-bottom: 20px; color: #38bdf8; font-size: 22px; }
+        input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; margin-bottom: 15px; outline: none; }
+        input:focus { border-color: #38bdf8; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; background: #0284c7; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #0369a1; }
+        #status { margin-top: 15px; font-size: 14px; word-break: break-all; }
+        .download-btn { display: inline-block; margin-top: 15px; padding: 10px 20px; background: #22c55e; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; }
+        .download-btn:hover { background: #16a34a; }
+        .error { color: #ef4444; }
+        .success { color: #4ade80; }
     </style>
 </head>
 <body>
 
-    <h2>TikTok Live Chest Filter</h2>
-
-    <div class="box">
-        <h3>1. Cấu hình hòm xu live của mày</h3>
-        Số xu trong hòm: <input type="number" id="myCoins" value="500">
-        <button onclick="updateMyStream()">Cập nhật Live của tao</button>
-        <div id="myStreamDisplay" style="margin-top:10px;"></div>
+    <div class="card">
+        <h2>Get Link APK / ZIP Telegram</h2>
+        <input type="text" id="tgUrl" placeholder="Dán link Telegram vào đây...">
+        <button id="btnGet" onclick="getFile()">Bắt đầu get file</button>
+        
+        <div id="status"></div>
     </div>
-
-    <div class="box">
-        <h3>2. Bộ lọc danh sách Live khác</h3>
-        <label>
-            <input type="checkbox" id="blockPayToWin" onchange="renderStreams()"> 
-            <b>Chặn Live bắt tặng xu mới được mở hòm (Phí > 0)</b>
-        </label>
-    </div>
-
-    <h3>Danh sách các Live đang phát:</h3>
-    <div class="stream-grid" id="streamContainer"></div>
 
     <script>
-        // Data giả lập danh sách các phòng live
-        const streams = [
-            { id: 1, user: "Kênh Chill Studio", coins: 100, entryFee: 0 },
-            { id: 2, user: "Săn Xu Giá Rẻ", coins: 50, entryFee: 10 },
-            { id: 3, user: "Idol Stream Game", coins: 1000, entryFee: 0 },
-            { id: 4, user: "Hòm Xu Hút Máu", coins: 500, entryFee: 50 },
-            { id: 5, user: "Giao Lưu Đêm Khuya", coins: 0, entryFee: 0 }
-        ];
+        async function getFile() {
+            const urlInput = document.getElementById('tgUrl').value.trim();
+            const statusDiv = document.getElementById('status');
+            const btn = document.getElementById('btnGet');
 
-        function updateMyStream() {
-            const coins = document.getElementById("myCoins").value;
-            const display = document.getElementById("myStreamDisplay");
-            display.innerHTML = `
-                <div class="card" style="border: 1px solid #fe2c55;">
-                    <strong>Phòng Live Của Mày</strong><br>
-                    ${coins > 0 ? `<span class="chest">🎁 Hòm: ${coins} Xu</span>` : '<i>Không có hòm xu</i>'}
-                </div>
-            `;
-        }
+            if (!urlInput) {
+                statusDiv.innerHTML = '<span class="error">Đán cái link vào đã ông ơi!</span>';
+                return;
+            }
 
-        function renderStreams() {
-            const container = document.getElementById("streamContainer");
-            const isBlockEnabled = document.getElementById("blockPayToWin").checked;
-            container.innerHTML = "";
+            statusDiv.innerHTML = '<span>Đang kéo file về server, chờ tí... (file nặng thì hơi lâu đấy)</span>';
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
 
-            streams.forEach(stream => {
-                const isBlocked = isBlockEnabled && stream.coins > 0 && stream.entryFee > 0;
-
-                if (isBlocked) return; // Chặn không hiển thị
-
-                const card = document.createElement("div");
-                card.className = "card";
+            try {
+                // Gọi tới API Python Backend
+                const response = await fetch(`/get-file?tg_url=${encodeURIComponent(urlInput)}`, {
+                    method: 'POST'
+                });
                 
-                let content = `<strong>${stream.user}</strong><br>`;
-                if (stream.coins > 0) {
-                    content += `<span class="chest">🎁 Hòm: ${stream.coins} Xu</span><br>`;
-                    if (stream.entryFee > 0) {
-                        content += `<div class="req">⚠️ Bắt tặng ${stream.entryFee} xu để vào</div>`;
-                    } else {
-                        content += `<div style="color:#00ff88; font-size:11px;">Mở miễn phí</div>`;
-                    }
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    statusDiv.innerHTML = `
+                        <p class="success"><b>Kéo thành công!</b></p>
+                        <p>Tệp: <b>${data.file_name}</b></p>
+                        <a class="download-btn" href="${data.download_url}" download>Tải về máy ngay</a>
+                    `;
                 } else {
-                    content += `<span style="color:#888; font-size:12px;">Không hòm</span>`;
+                    statusDiv.innerHTML = `<span class="error">Lỗi: ${data.detail || 'Không lấy được file!'}</span>`;
                 }
-
-                card.innerHTML = content;
-                container.appendChild(card);
-            });
+            } catch (err) {
+                statusDiv.innerHTML = '<span class="error">Không kết nối được với Server Backend!</span>';
+            } finally {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
         }
-
-        // Chạy lần đầu
-        updateMyStream();
-        renderStreams();
     </script>
+
 </body>
 </html>
+p

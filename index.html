@@ -3,74 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Link APK / ZIP Telegram</title>
+    <title>FF Offset Dumper & Search Tool</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .card { background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; max-width: 500px; text-align: center; border: 1px solid #334155; }
-        h2 { margin-bottom: 20px; color: #38bdf8; font-size: 22px; }
-        input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; margin-bottom: 15px; outline: none; }
-        input:focus { border-color: #38bdf8; }
-        button { width: 100%; padding: 12px; border: none; border-radius: 8px; background: #0284c7; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #0369a1; }
-        #status { margin-top: 15px; font-size: 14px; word-break: break-all; }
-        .download-btn { display: inline-block; margin-top: 15px; padding: 10px 20px; background: #22c55e; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; }
-        .download-btn:hover { background: #16a34a; }
-        .error { color: #ef4444; }
-        .success { color: #4ade80; }
+        * { box-sizing: border-box; font-family: monospace; }
+        body { background: #121212; color: #00ff66; padding: 15px; margin: 0; }
+        h2 { text-align: center; color: #fff; text-shadow: 0 0 10px #00ff66; }
+        .box { background: #1e1e1e; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        input[type="file"], input[type="text"] { width: 100%; padding: 10px; margin: 8px 0; background: #2a2a2a; color: #fff; border: 1px solid #444; border-radius: 4px; }
+        button { background: #00ff66; color: #000; font-weight: bold; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 5px; }
+        button:hover { background: #00cc52; }
+        .stats { font-size: 12px; color: #aaa; margin-top: 5px; }
+        #output { width: 100%; height: 350px; background: #080808; color: #00ff66; border: 1px solid #333; padding: 10px; font-size: 11px; overflow-y: scroll; white-space: pre-wrap; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>Get Link APK / ZIP Telegram</h2>
-        <input type="text" id="tgUrl" placeholder="Dán link Telegram vào đây...">
-        <button id="btnGet" onclick="getFile()">Bắt đầu get file</button>
-        
-        <div id="status"></div>
+    <h2>FF OFFSET DUMPER & SEARCH</h2>
+
+    <div class="box">
+        <label style="color:#fff;">1. Chọn tệp Lib (.so) hoặc Metadata (.dat):</label>
+        <input type="file" id="fileInput" accept=".so,.dat,.json,.txt">
+        <button onclick="processFile()">Tải & Phân Tích Tệp</button>
+        <div id="fileInfo" class="stats">Chưa có tệp nào được nạp.</div>
+    </div>
+
+    <div class="box">
+        <label style="color:#fff;">2. Tìm kiếm Offset (Ví dụ: Head, Recoil, Player):</label>
+        <input type="text" id="searchInput" oninput="filterOffsets()" placeholder="Nhập từ khóa cần tìm...">
+        <div id="searchStats" class="stats">Đã tìm thấy: 0 kết quả</div>
+    </div>
+
+    <div class="box">
+        <label style="color:#fff;">3. Kết quả Offset:</label>
+        <div id="output">// Hãy nạp file để bắt đầu xuất dữ liệu Offset...</div>
+        <button onclick="exportFile()" style="margin-top: 10px; background: #00bcd4;">Xuất Tệp Offset (.txt)</button>
     </div>
 
     <script>
-        async function getFile() {
-            const urlInput = document.getElementById('tgUrl').value.trim();
-            const statusDiv = document.getElementById('status');
-            const btn = document.getElementById('btnGet');
+        let rawData = [];
+        let filteredData = [];
 
-            if (!urlInput) {
-                statusDiv.innerHTML = '<span class="error">Đán cái link vào đã ông ơi!</span>';
+        function processFile() {
+            const file = document.getElementById('fileInput').files[0];
+            const fileInfo = document.getElementById('fileInfo');
+            const output = document.getElementById('output');
+
+            if (!file) {
+                alert("Vui lòng chọn một tệp!");
                 return;
             }
 
-            statusDiv.innerHTML = '<span>Đang kéo file về server, chờ tí... (file nặng thì hơi lâu đấy)</span>';
-            btn.disabled = true;
-            btn.style.opacity = '0.6';
+            fileInfo.innerText = `Đang đọc: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)...`;
+            output.innerText = "Đang quét danh sách Offset, vui lòng đợi trong giây lát...";
 
-            try {
-                // Gọi tới API Python Backend
-                const response = await fetch(`/get-file?tg_url=${encodeURIComponent(urlInput)}`, {
-                    method: 'POST'
-                });
+            const reader = new FileReader();
+            
+            // Xử lý đọc file text/JSON hoặc binary đơn giản
+            reader.onload = function(e) {
+                const text = e.target.result;
                 
-                const data = await response.json();
+                // Mô phỏng đọc chuỗi/Regex để trích xuất hàm và Offset từ file dump
+                const lineRegex = /(?:([a-zA-Z0-9_]+)\s*[:=]\s*(0x[0-9a-fA-F]+))|(?:Offset:\s*(0x[0-9a-fA-F]+)\s*->\s*([a-zA-Z0-9_]+))/g;
+                let match;
+                rawData = [];
 
-                if (response.ok && data.status === 'success') {
-                    statusDiv.innerHTML = `
-                        <p class="success"><b>Kéo thành công!</b></p>
-                        <p>Tệp: <b>${data.file_name}</b></p>
-                        <a class="download-btn" href="${data.download_url}" download>Tải về máy ngay</a>
-                    `;
-                } else {
-                    statusDiv.innerHTML = `<span class="error">Lỗi: ${data.detail || 'Không lấy được file!'}</span>`;
+                // Giả lập quét cấu trúc chuỗi Hex Offset
+                const lines = text.split('\n');
+                lines.forEach((line, index) => {
+                    if (line.includes('0x') || line.includes('Offset') || line.includes('Get') || line.includes('Set')) {
+                        rawData.push(`[Line ${index + 1}] ${line.trim()}`);
+                    }
+                });
+
+                if (rawData.length === 0) {
+                    output.innerText = "Không tìm thấy cấu trúc Offset dạng Hex chuẩn. Vui lòng nạp file script.json hoặc file .txt đã dump qua Il2CppDumper.";
+                    fileInfo.innerText = "Phân tích thất bại - Không tìm thấy mẫu Offset.";
+                    return;
                 }
-            } catch (err) {
-                statusDiv.innerHTML = '<span class="error">Không kết nối được với Server Backend!</span>';
-            } finally {
-                btn.disabled = false;
-                btn.style.opacity = '1';
+
+                fileInfo.innerText = `Hoàn tất! Tổng số Offset quét được: ${rawData.length}`;
+                filteredData = [...rawData];
+                renderOutput();
+            };
+
+            reader.readAsText(file);
+        }
+
+        function renderOutput() {
+            const output = document.getElementById('output');
+            const searchStats = document.getElementById('searchStats');
+            
+            searchStats.innerText = `Hiển thị: ${filteredData.length} / ${rawData.length} kết quả`;
+            output.innerText = filteredData.join('\n');
+        }
+
+        function filterOffsets() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            if (!query) {
+                filteredData = [...rawData];
+            } else {
+                filteredData = rawData.filter(item => item.toLowerCase().includes(query));
             }
+            renderOutput();
+        }
+
+        function exportFile() {
+            if (filteredData.length === 0) {
+                alert("Không có dữ liệu Offset để xuất!");
+                return;
+            }
+
+            const blob = new Blob([filteredData.join('\n')], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'FF_Offsets_Export.txt';
+            link.click();
         }
     </script>
-
 </body>
 </html>
-p

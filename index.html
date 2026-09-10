@@ -3,122 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF Offset Dumper & Search Tool</title>
+    <title>FF OFFSET DUMPER PRO</title>
+    <!-- Thư viện JSZip hỗ trợ xé file APK/ZIP trực tiếp trên trình duyệt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        * { box-sizing: border-box; font-family: monospace; }
-        body { background: #121212; color: #00ff66; padding: 15px; margin: 0; }
-        h2 { text-align: center; color: #fff; text-shadow: 0 0 10px #00ff66; }
-        .box { background: #1e1e1e; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        input[type="file"], input[type="text"] { width: 100%; padding: 10px; margin: 8px 0; background: #2a2a2a; color: #fff; border: 1px solid #444; border-radius: 4px; }
-        button { background: #00ff66; color: #000; font-weight: bold; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 5px; }
-        button:hover { background: #00cc52; }
-        .stats { font-size: 12px; color: #aaa; margin-top: 5px; }
-        #output { width: 100%; height: 350px; background: #080808; color: #00ff66; border: 1px solid #333; padding: 10px; font-size: 11px; overflow-y: scroll; white-space: pre-wrap; border-radius: 4px; }
+        :root {
+            --bg-color: #0d0e12;
+            --card-bg: #15171e;
+            --accent-color: #00ff66;
+            --text-color: #e0e0e0;
+            --border-color: #262933;
+        }
+
+        * { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
+        body { background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; }
+        .container { max-width: 650px; margin: 0 auto; }
+
+        h1 { text-align: center; color: #fff; font-size: 20px; text-shadow: 0 0 10px var(--accent-color); margin-bottom: 20px; }
+        .box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+
+        label { display: block; color: var(--accent-color); font-weight: bold; font-size: 13px; margin-bottom: 8px; }
+        input[type="file"], input[type="text"] { width: 100%; padding: 10px; background: #0b0c0e; color: #fff; border: 1px solid var(--border-color); border-radius: 5px; outline: none; margin-bottom: 8px; }
+        input[type="text"]:focus { border-color: var(--accent-color); }
+
+        button { width: 100%; padding: 12px; background: var(--accent-color); color: #000; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        button:hover { opacity: 0.9; }
+        .btn-export { background: #00bcd4; color: #fff; margin-top: 10px; }
+
+        /* Thanh tiến độ & phần trăm */
+        .progress-section { display: none; margin-top: 10px; }
+        .progress-bar-bg { width: 100%; height: 20px; background: #0b0c0e; border-radius: 10px; border: 1px solid var(--border-color); overflow: hidden; position: relative; }
+        .progress-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00b347, var(--accent-color)); transition: width 0.15s ease; }
+        .progress-percent { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
+        .status-text { font-size: 11px; color: #888; margin-top: 5px; }
+
+        /* Khung hiển thị kết quả */
+        #output { width: 100%; height: 300px; background: #07080a; color: var(--accent-color); border: 1px solid var(--border-color); padding: 10px; font-size: 12px; overflow-y: scroll; white-space: pre-wrap; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <h2>FF OFFSET DUMPER & SEARCH</h2>
+<div class="container">
+    <h1>🔥 FF OFFSET DUMPER PRO 🔥</h1>
 
+    <!-- BƯỚC 1: TẢI FILE -->
     <div class="box">
-        <label style="color:#fff;">1. Chọn tệp Lib (.so) hoặc Metadata (.dat):</label>
-        <input type="file" id="fileInput" accept=".so,.dat,.json,.txt">
-        <button onclick="processFile()">Tải & Phân Tích Tệp</button>
-        <div id="fileInfo" class="stats">Chưa có tệp nào được nạp.</div>
+        <label>1. NẠP TỆP GAME (APK, LIBIL2CPP.SO, SCRIPT.JSON, DUMP.CS):</label>
+        <input type="file" id="fileInput" accept=".apk,.so,.dat,.json,.txt,.cs">
+        <button onclick="startProcessing()">BẮT ĐẦU GIẢI NÉN & QUÉT</button>
+
+        <!-- Thanh Tiến Độ -->
+        <div id="progressSection" class="progress-section">
+            <div class="progress-bar-bg">
+                <div id="progressBarFill" class="progress-bar-fill"></div>
+                <div id="progressPercent" class="progress-percent">0%</div>
+            </div>
+            <div id="statusText" class="status-text">Đang chờ lệnh...</div>
+        </div>
     </div>
 
+    <!-- BƯỚC 2: TÌM KIẾM -->
     <div class="box">
-        <label style="color:#fff;">2. Tìm kiếm Offset (Ví dụ: Head, Recoil, Player):</label>
-        <input type="text" id="searchInput" oninput="filterOffsets()" placeholder="Nhập từ khóa cần tìm...">
-        <div id="searchStats" class="stats">Đã tìm thấy: 0 kết quả</div>
+        <label>2. TÌM KIẾM OFFSET (VÍ DỤ: Head, Recoil, Aim...):</label>
+        <input type="text" id="searchInput" oninput="filterData()" placeholder="Nhập từ khóa tìm kiếm...">
+        <div id="countStats" class="status-text">Đã tìm thấy: 0 kết quả</div>
     </div>
 
+    <!-- BƯỚC 3: KẾT QUẢ & XUẤT TỆP -->
     <div class="box">
-        <label style="color:#fff;">3. Kết quả Offset:</label>
-        <div id="output">// Hãy nạp file để bắt đầu xuất dữ liệu Offset...</div>
-        <button onclick="exportFile()" style="margin-top: 10px; background: #00bcd4;">Xuất Tệp Offset (.txt)</button>
+        <label>3. KẾT QUẢ TÌM THẤY:</label>
+        <div id="output">// Hãy tải file để hiển thị Offset...</div>
+        <button class="btn-export" onclick="exportFile()">XUẤT TỆP OFFSET (.TXT)</button>
     </div>
+</div>
 
-    <script>
-        let rawData = [];
-        let filteredData = [];
+<script>
+    let rawOffsets = [];
+    let filteredOffsets = [];
 
-        function processFile() {
-            const file = document.getElementById('fileInput').files[0];
-            const fileInfo = document.getElementById('fileInfo');
-            const output = document.getElementById('output');
+    function setProgress(percent, statusMsg) {
+        const pSection = document.getElementById('progressSection');
+        const pFill = document.getElementById('progressBarFill');
+        const pPercent = document.getElementById('progressPercent');
+        const sText = document.getElementById('statusText');
 
-            if (!file) {
-                alert("Vui lòng chọn một tệp!");
-                return;
-            }
+        pSection.style.display = 'block';
+        pFill.style.width = percent + '%';
+        pPercent.innerText = percent + '%';
+        if (statusMsg) sText.innerText = statusMsg;
+    }
 
-            fileInfo.innerText = `Đang đọc: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)...`;
-            output.innerText = "Đang quét danh sách Offset, vui lòng đợi trong giây lát...";
+    async function startProcessing() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+        const output = document.getElementById('output');
 
-            const reader = new FileReader();
-            
-            // Xử lý đọc file text/JSON hoặc binary đơn giản
-            reader.onload = function(e) {
-                const text = e.target.result;
-                
-                // Mô phỏng đọc chuỗi/Regex để trích xuất hàm và Offset từ file dump
-                const lineRegex = /(?:([a-zA-Z0-9_]+)\s*[:=]\s*(0x[0-9a-fA-F]+))|(?:Offset:\s*(0x[0-9a-fA-F]+)\s*->\s*([a-zA-Z0-9_]+))/g;
-                let match;
-                rawData = [];
+        if (!file) {
+            alert("Vui lòng chọn một tệp trước!");
+            return;
+        }
 
-                // Giả lập quét cấu trúc chuỗi Hex Offset
-                const lines = text.split('\n');
-                lines.forEach((line, index) => {
-                    if (line.includes('0x') || line.includes('Offset') || line.includes('Get') || line.includes('Set')) {
-                        rawData.push(`[Line ${index + 1}] ${line.trim()}`);
+        rawOffsets = [];
+        filteredOffsets = [];
+        output.innerText = "Đang khởi tạo...";
+        setProgress(5, `Đang nạp tệp: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)...`);
+
+        // Nếu là file APK -> Giải nén trực tiếp bằng JSZip
+        if (file.name.endsWith('.apk')) {
+            try {
+                setProgress(15, "Phát hiện APK. Đang tự động xé file...");
+                const zip = new JSZip();
+                const zipContent = await zip.loadAsync(file, {
+                    onUpdate: (metadata) => {
+                        let p = Math.round(15 + (metadata.percent * 0.5));
+                        setProgress(p, `Đang giải nén APK: ${metadata.percent.toFixed(0)}%`);
                     }
                 });
 
-                if (rawData.length === 0) {
-                    output.innerText = "Không tìm thấy cấu trúc Offset dạng Hex chuẩn. Vui lòng nạp file script.json hoặc file .txt đã dump qua Il2CppDumper.";
-                    fileInfo.innerText = "Phân tích thất bại - Không tìm thấy mẫu Offset.";
+                setProgress(70, "Đang truy tìm file mã nguồn (script.json / dump.cs)...");
+                let targetFile = zip.file(/script\.json$/i)[0] || 
+                                 zip.file(/dump\.cs$/i)[0] || 
+                                 zip.file(/libil2cpp\.so$/i)[0];
+
+                if (!targetFile) {
+                    setProgress(100, "Xong!");
+                    output.innerText = "Không tìm thấy file script.json hay dump.cs trong APK!\n\nLời khuyên: Ông nên dùng ZArchiver trích xuất file 'script.json' từ Dumper trên máy ra rồi nạp trực tiếp file đó vào web sẽ chuẩn 100%!";
                     return;
                 }
 
-                fileInfo.innerText = `Hoàn tất! Tổng số Offset quét được: ${rawData.length}`;
-                filteredData = [...rawData];
-                renderOutput();
-            };
+                setProgress(85, `Đang xử lý dữ liệu: ${targetFile.name}...`);
+                const fileText = await targetFile.async("string");
+                parseOffsets(fileText);
 
+            } catch (err) {
+                setProgress(100, "Thất bại!");
+                output.innerText = "Lỗi khi xé file APK: " + err.message;
+            }
+        } else {
+            // Nếu là file văn bản / JSON / SO
+            const reader = new FileReader();
+            reader.onprogress = (e) => {
+                if (e.lengthComputable) {
+                    let p = Math.round((e.loaded / e.total) * 85);
+                    setProgress(p, "Đang đọc tệp...");
+                }
+            };
+            reader.onload = (e) => {
+                setProgress(90, "Đang trích xuất cấu trúc Offset...");
+                setTimeout(() => { parseOffsets(e.target.result); }, 50);
+            };
             reader.readAsText(file);
         }
+    }
 
-        function renderOutput() {
-            const output = document.getElementById('output');
-            const searchStats = document.getElementById('searchStats');
-            
-            searchStats.innerText = `Hiển thị: ${filteredData.length} / ${rawData.length} kết quả`;
-            output.innerText = filteredData.join('\n');
-        }
-
-        function filterOffsets() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            if (!query) {
-                filteredData = [...rawData];
-            } else {
-                filteredData = rawData.filter(item => item.toLowerCase().includes(query));
+    function parseOffsets(text) {
+        const lines = text.split('\n');
+        lines.forEach((line, idx) => {
+            // Lọc các dòng chứa địa chỉ Hex (0x...) hoặc chứa từ khóa hàm
+            if (line.includes('0x') || line.includes('Offset') || line.includes('Get') || line.includes('Set')) {
+                rawOffsets.push(`[Line ${idx + 1}] ${line.trim()}`);
             }
-            renderOutput();
+        });
+
+        setProgress(100, `Hoàn tất! Đã trích xuất ${rawOffsets.length} Offset.`);
+        
+        if (rawOffsets.length === 0) {
+            document.getElementById('output').innerText = "Không tìm thấy định dạng Hex Offset (0x...). Vui lòng kiểm tra lại file nạp vào!";
+            return;
         }
 
-        function exportFile() {
-            if (filteredData.length === 0) {
-                alert("Không có dữ liệu Offset để xuất!");
-                return;
-            }
+        filteredOffsets = [...rawOffsets];
+        render();
+    }
 
-            const blob = new Blob([filteredData.join('\n')], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'FF_Offsets_Export.txt';
-            link.click();
+    function render() {
+        document.getElementById('countStats').innerText = `Hiển thị: ${filteredOffsets.length} / ${rawOffsets.length} kết quả`;
+        document.getElementById('output').innerText = filteredOffsets.join('\n');
+    }
+
+    function filterData() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        filteredOffsets = query ? rawOffsets.filter(item => item.toLowerCase().includes(query)) : [...rawOffsets];
+        render();
+    }
+
+    function exportFile() {
+        if (filteredOffsets.length === 0) {
+            alert("Chưa có dữ liệu Offset nào để xuất!");
+            return;
         }
-    </script>
+
+        const blob = new Blob([filteredOffsets.join('\n')], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'FF_Offsets_Exported.txt';
+        a.click();
+    }
+</script>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF OFFSET DUMPER PRO</title>
-    <!-- Thư viện JSZip hỗ trợ xé file APK/ZIP trực tiếp trên trình duyệt -->
+    <title>FF OFFSET DUMPER PRO V4</title>
+    <!-- JSZip xử lý xé file APK trực tiếp -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root {
@@ -15,71 +15,79 @@
             --border-color: #262933;
         }
 
-        * { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
-        body { background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', monospace; }
+        body { background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 12px; }
         .container { max-width: 650px; margin: 0 auto; }
 
-        h1 { text-align: center; color: #fff; font-size: 20px; text-shadow: 0 0 10px var(--accent-color); margin-bottom: 20px; }
-        .box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        h1 { text-align: center; color: #fff; font-size: 18px; text-shadow: 0 0 10px var(--accent-color); margin-bottom: 15px; }
+        .box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; margin-bottom: 12px; }
 
-        label { display: block; color: var(--accent-color); font-weight: bold; font-size: 13px; margin-bottom: 8px; }
-        input[type="file"], input[type="text"] { width: 100%; padding: 10px; background: #0b0c0e; color: #fff; border: 1px solid var(--border-color); border-radius: 5px; outline: none; margin-bottom: 8px; }
+        label { display: block; color: var(--accent-color); font-weight: bold; font-size: 12px; margin-bottom: 6px; }
+        input[type="file"], input[type="text"] { width: 100%; padding: 10px; background: #0b0c0e; color: #fff; border: 1px solid var(--border-color); border-radius: 5px; outline: none; margin-bottom: 6px; font-size: 13px; }
         input[type="text"]:focus { border-color: var(--accent-color); }
 
-        button { width: 100%; padding: 12px; background: var(--accent-color); color: #000; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        button { width: 100%; padding: 10px; background: var(--accent-color); color: #000; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; font-size: 13px; transition: 0.2s; }
         button:hover { opacity: 0.9; }
-        .btn-export { background: #00bcd4; color: #fff; margin-top: 10px; }
 
-        /* Thanh tiến độ & phần trăm */
-        .progress-section { display: none; margin-top: 10px; }
-        .progress-bar-bg { width: 100%; height: 20px; background: #0b0c0e; border-radius: 10px; border: 1px solid var(--border-color); overflow: hidden; position: relative; }
+        /* Progress Bar */
+        .progress-section { display: none; margin-top: 8px; }
+        .progress-bar-bg { width: 100%; height: 18px; background: #0b0c0e; border-radius: 10px; border: 1px solid var(--border-color); overflow: hidden; position: relative; }
         .progress-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00b347, var(--accent-color)); transition: width 0.15s ease; }
-        .progress-percent { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
-        .status-text { font-size: 11px; color: #888; margin-top: 5px; }
+        .progress-percent { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
+        .status-text { font-size: 11px; color: #888; margin-top: 4px; }
 
-        /* Khung hiển thị kết quả */
-        #output { width: 100%; height: 300px; background: #07080a; color: var(--accent-color); border: 1px solid var(--border-color); padding: 10px; font-size: 12px; overflow-y: scroll; white-space: pre-wrap; border-radius: 5px; }
+        /* ZArchiver Style Explorer */
+        .file-explorer { max-height: 150px; overflow-y: auto; background: #07080a; border: 1px solid var(--border-color); border-radius: 5px; padding: 6px; display: none; margin-top: 8px; }
+        .file-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid #1a1c23; font-size: 11px; cursor: pointer; border-radius: 3px; }
+        .file-item:hover { background: #1c1f2b; }
+
+        /* Danh sách danh mục Offset bấm để tải */
+        .result-list { max-height: 300px; overflow-y: auto; background: #07080a; border: 1px solid var(--border-color); border-radius: 5px; padding: 6px; margin-top: 8px; }
+        .offset-card { display: flex; justify-content: space-between; align-items: center; background: #111319; border: 1px solid #1f222e; padding: 8px 10px; margin-bottom: 6px; border-radius: 4px; font-size: 11px; transition: 0.2s; }
+        .offset-card:hover { border-color: var(--accent-color); background: #171a24; }
+        .offset-info { font-family: monospace; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px; }
+        .btn-download-single { background: #00bcd4; color: #fff; border: none; padding: 4px 8px; font-size: 10px; font-weight: bold; border-radius: 3px; cursor: pointer; white-space: nowrap; width: auto; }
+        .btn-download-single:hover { background: #00acc1; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🔥 FF OFFSET DUMPER PRO 🔥</h1>
+    <h1>🔥 đèo mẹ tool chếch offset game 🔥</h1>
 
-    <!-- BƯỚC 1: TẢI FILE -->
+    <!-- 1. NẠP FILE -->
     <div class="box">
         <label>1. NẠP TỆP GAME (APK, LIBIL2CPP.SO, SCRIPT.JSON, DUMP.CS):</label>
         <input type="file" id="fileInput" accept=".apk,.so,.dat,.json,.txt,.cs">
-        <button onclick="startProcessing()">BẮT ĐẦU GIẢI NÉN & QUÉT</button>
+        <button onclick="startProcessing()">NẠP VÀ PHÂN TÍCH TỆP</button>
 
-        <!-- Thanh Tiến Độ -->
         <div id="progressSection" class="progress-section">
             <div class="progress-bar-bg">
                 <div id="progressBarFill" class="progress-bar-fill"></div>
                 <div id="progressPercent" class="progress-percent">0%</div>
             </div>
-            <div id="statusText" class="status-text">Đang chờ lệnh...</div>
+            <div id="statusText" class="status-text">Đang chờ tệp...</div>
         </div>
+
+        <div id="fileExplorer" class="file-explorer"></div>
     </div>
 
-    <!-- BƯỚC 2: TÌM KIẾM -->
+    <!-- 2. TÌM KIẾM & TẢI TỆP CLICK -->
     <div class="box">
-        <label>2. TÌM KIẾM OFFSET (VÍ DỤ: Head, Recoil, Aim...):</label>
-        <input type="text" id="searchInput" oninput="filterData()" placeholder="Nhập từ khóa tìm kiếm...">
-        <div id="countStats" class="status-text">Đã tìm thấy: 0 kết quả</div>
-    </div>
-
-    <!-- BƯỚC 3: KẾT QUẢ & XUẤT TỆP -->
-    <div class="box">
-        <label>3. KẾT QUẢ TÌM THẤY:</label>
-        <div id="output">// Hãy tải file để hiển thị Offset...</div>
-        <button class="btn-export" onclick="exportFile()">XUẤT TỆP OFFSET (.TXT)</button>
+        <label>2. TÌM KIẾM & BẤM VÀO KẾT QUẢ ĐỂ TẢI:</label>
+        <input type="text" id="searchInput" oninput="filterData()" placeholder="Gõ từ khóa: Head, Recoil, Aim, Speed...">
+        <div id="countStats" class="status-text">Kết quả: 0</div>
+        
+        <div id="resultList" class="result-list">
+            <div style="color: #666; font-size: 11px; text-align: center; padding: 10px;">Chưa có dữ liệu. Vui lòng nạp tệp trước!</div>
+        </div>
     </div>
 </div>
 
 <script>
     let rawOffsets = [];
     let filteredOffsets = [];
+    let loadedZip = null;
 
     function setProgress(percent, statusMsg) {
         const pSection = document.getElementById('progressSection');
@@ -96,107 +104,163 @@
     async function startProcessing() {
         const fileInput = document.getElementById('fileInput');
         const file = fileInput.files[0];
-        const output = document.getElementById('output');
+        const explorer = document.getElementById('fileExplorer');
 
         if (!file) {
-            alert("Vui lòng chọn một tệp trước!");
+            alert("Ông chưa chọn tệp kìa!");
             return;
         }
 
         rawOffsets = [];
         filteredOffsets = [];
-        output.innerText = "Đang khởi tạo...";
-        setProgress(5, `Đang nạp tệp: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)...`);
+        explorer.style.display = 'none';
+        explorer.innerHTML = '';
+        setProgress(5, `Tệp: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)...`);
 
-        // Nếu là file APK -> Giải nén trực tiếp bằng JSZip
         if (file.name.endsWith('.apk')) {
             try {
-                setProgress(15, "Phát hiện APK. Đang tự động xé file...");
+                setProgress(15, "Phát hiện APK. Đang liệt kê file bên trong...");
                 const zip = new JSZip();
-                const zipContent = await zip.loadAsync(file, {
+                loadedZip = await zip.loadAsync(file, {
                     onUpdate: (metadata) => {
-                        let p = Math.round(15 + (metadata.percent * 0.5));
-                        setProgress(p, `Đang giải nén APK: ${metadata.percent.toFixed(0)}%`);
+                        let p = Math.round(15 + (metadata.percent * 0.6));
+                        setProgress(p, `Đang xé APK: ${metadata.percent.toFixed(0)}%`);
                     }
                 });
 
-                setProgress(70, "Đang truy tìm file mã nguồn (script.json / dump.cs)...");
-                let targetFile = zip.file(/script\.json$/i)[0] || 
-                                 zip.file(/dump\.cs$/i)[0] || 
-                                 zip.file(/libil2cpp\.so$/i)[0];
+                setProgress(80, "Hiển thị ZArchiver thu gọn...");
+                renderFileExplorer(loadedZip);
 
-                if (!targetFile) {
-                    setProgress(100, "Xong!");
-                    output.innerText = "Không tìm thấy file script.json hay dump.cs trong APK!\n\nLời khuyên: Ông nên dùng ZArchiver trích xuất file 'script.json' từ Dumper trên máy ra rồi nạp trực tiếp file đó vào web sẽ chuẩn 100%!";
-                    return;
+                let priorityFile = loadedZip.file(/script\.json$/i)[0] || loadedZip.file(/dump\.cs$/i)[0] || loadedZip.file(/libil2cpp\.so$/i)[0];
+                if (priorityFile) {
+                    await loadZipFileContent(priorityFile.name);
+                } else {
+                    setProgress(100, "Chọn file từ danh sách bên trên để soi Offset!");
                 }
 
-                setProgress(85, `Đang xử lý dữ liệu: ${targetFile.name}...`);
-                const fileText = await targetFile.async("string");
-                parseOffsets(fileText);
-
             } catch (err) {
-                setProgress(100, "Thất bại!");
-                output.innerText = "Lỗi khi xé file APK: " + err.message;
+                setProgress(100, "Lỗi!");
+                alert("Lỗi đọc APK: " + err.message);
             }
         } else {
-            // Nếu là file văn bản / JSON / SO
             const reader = new FileReader();
             reader.onprogress = (e) => {
                 if (e.lengthComputable) {
                     let p = Math.round((e.loaded / e.total) * 85);
-                    setProgress(p, "Đang đọc tệp...");
+                    setProgress(p, "Đang nạp file...");
                 }
             };
             reader.onload = (e) => {
-                setProgress(90, "Đang trích xuất cấu trúc Offset...");
+                setProgress(90, "Đang xử lý dữ liệu...");
                 setTimeout(() => { parseOffsets(e.target.result); }, 50);
             };
             reader.readAsText(file);
         }
     }
 
-    function parseOffsets(text) {
-        const lines = text.split('\n');
-        lines.forEach((line, idx) => {
-            // Lọc các dòng chứa địa chỉ Hex (0x...) hoặc chứa từ khóa hàm
-            if (line.includes('0x') || line.includes('Offset') || line.includes('Get') || line.includes('Set')) {
-                rawOffsets.push(`[Line ${idx + 1}] ${line.trim()}`);
+    function renderFileExplorer(zip) {
+        const explorer = document.getElementById('fileExplorer');
+        explorer.innerHTML = '';
+        explorer.style.display = 'block';
+
+        const fileList = [];
+        zip.forEach((relativePath, zipEntry) => {
+            if (!zipEntry.dir && (relativePath.includes('lib') || relativePath.includes('script') || relativePath.includes('dump') || relativePath.includes('assets'))) {
+                fileList.push(zipEntry);
             }
         });
 
-        setProgress(100, `Hoàn tất! Đã trích xuất ${rawOffsets.length} Offset.`);
+        fileList.slice(0, 15).forEach(zipEntry => {
+            const item = document.createElement('div');
+            item.className = 'file-item';
+            item.innerHTML = `
+                <span>📄 ${zipEntry.name}</span>
+                <span style="color:#666; font-size:10px;">${(zipEntry._data.uncompressedSize / 1024).toFixed(0)} KB</span>
+            `;
+
+            item.onclick = async () => {
+                await loadZipFileContent(zipEntry.name);
+            };
+
+            explorer.appendChild(item);
+        });
+    }
+
+    async function loadZipFileContent(fileName) {
+        setProgress(85, `Bóc tách file: ${fileName}...`);
+        try {
+            const fileText = await loadedZip.file(fileName).async("string");
+            parseOffsets(fileText);
+        } catch(e) {
+            setProgress(100, "Lỗi đọc tệp!");
+            alert("Tệp này là định dạng nhị phân, hãy chọn file script.json hoặc dump.cs!");
+        }
+    }
+
+    function parseOffsets(text) {
+        rawOffsets = [];
+        const lines = text.split('\n');
+        lines.forEach((line) => {
+            if (line.includes('0x') || line.includes('Offset') || line.includes('Get') || line.includes('Set')) {
+                if(line.trim().length > 0) rawOffsets.push(line.trim());
+            }
+        });
+
+        setProgress(100, `Thành công! Tìm thấy ${rawOffsets.length} Offset.`);
+        filteredOffsets = [...rawOffsets];
+        renderResults();
+    }
+
+    function renderResults() {
+        const resList = document.getElementById('resultList');
+        const countStats = document.getElementById('countStats');
         
-        if (rawOffsets.length === 0) {
-            document.getElementById('output').innerText = "Không tìm thấy định dạng Hex Offset (0x...). Vui lòng kiểm tra lại file nạp vào!";
+        countStats.innerText = `Hiển thị: ${filteredOffsets.length} / ${rawOffsets.length} kết quả`;
+        resList.innerHTML = '';
+
+        if (filteredOffsets.length === 0) {
+            resList.innerHTML = `<div style="color: #666; font-size: 11px; text-align: center; padding: 10px;">Không tìm thấy kết quả phù hợp!</div>`;
             return;
         }
 
-        filteredOffsets = [...rawOffsets];
-        render();
-    }
+        // Tối ưu danh sách hiển thị tối đa 100 dòng đầu để không đơ máy
+        filteredOffsets.slice(0, 100).forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'offset-card';
+            
+            // Cắt ngắn chuỗi hiển thị gọn gàng
+            let cleanText = item.length > 55 ? item.substring(0, 55) + '...' : item;
 
-    function render() {
-        document.getElementById('countStats').innerText = `Hiển thị: ${filteredOffsets.length} / ${rawOffsets.length} kết quả`;
-        document.getElementById('output').innerText = filteredOffsets.join('\n');
+            card.innerHTML = `
+                <div class="offset-info" title="${item}">${cleanText}</div>
+                <button class="btn-download-single" onclick="downloadSingleOffset('${encodeURIComponent(item)}')">Tải Tệp</button>
+            `;
+
+            resList.appendChild(card);
+        });
     }
 
     function filterData() {
         const query = document.getElementById('searchInput').value.toLowerCase();
         filteredOffsets = query ? rawOffsets.filter(item => item.toLowerCase().includes(query)) : [...rawOffsets];
-        render();
+        renderResults();
     }
 
-    function exportFile() {
-        if (filteredOffsets.length === 0) {
-            alert("Chưa có dữ liệu Offset nào để xuất!");
-            return;
+    // TẢI DUY NHẤT 1 FILE OFFSET BẤM CHỌN
+    function downloadSingleOffset(encodedText) {
+        const text = decodeURIComponent(encodedText);
+        
+        // Tự bóc tách lấy tênOffset để đặt tên file cho gọn
+        let fileName = "Offset_Item.txt";
+        let match = text.match(/([a-zA-Z0-9_]+)\s*[:=]/) || text.match(/(0x[0-9a-fA-F]+)/);
+        if(match) {
+            fileName = `Offset_${match[1]}.txt`;
         }
 
-        const blob = new Blob([filteredOffsets.join('\n')], { type: 'text/plain' });
+        const blob = new Blob([text], { type: 'text/plain' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'FF_Offsets_Exported.txt';
+        a.download = fileName;
         a.click();
     }
 </script>

@@ -3,266 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF OFFSET DUMPER PRO V4</title>
-    <!-- JSZip xử lý xé file APK trực tiếp -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <title> Tool App Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #0d0e12;
-            --card-bg: #15171e;
-            --accent-color: #00ff66;
-            --text-color: #e0e0e0;
-            --border-color: #262933;
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #0B0E14;
         }
-
-        * { box-sizing: border-box; font-family: 'Segoe UI', monospace; }
-        body { background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 12px; }
-        .container { max-width: 650px; margin: 0 auto; }
-
-        h1 { text-align: center; color: #fff; font-size: 18px; text-shadow: 0 0 10px var(--accent-color); margin-bottom: 15px; }
-        .box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; margin-bottom: 12px; }
-
-        label { display: block; color: var(--accent-color); font-weight: bold; font-size: 12px; margin-bottom: 6px; }
-        input[type="file"], input[type="text"] { width: 100%; padding: 10px; background: #0b0c0e; color: #fff; border: 1px solid var(--border-color); border-radius: 5px; outline: none; margin-bottom: 6px; font-size: 13px; }
-        input[type="text"]:focus { border-color: var(--accent-color); }
-
-        button { width: 100%; padding: 10px; background: var(--accent-color); color: #000; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; font-size: 13px; transition: 0.2s; }
-        button:hover { opacity: 0.9; }
-
-        /* Progress Bar */
-        .progress-section { display: none; margin-top: 8px; }
-        .progress-bar-bg { width: 100%; height: 18px; background: #0b0c0e; border-radius: 10px; border: 1px solid var(--border-color); overflow: hidden; position: relative; }
-        .progress-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00b347, var(--accent-color)); transition: width 0.15s ease; }
-        .progress-percent { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
-        .status-text { font-size: 11px; color: #888; margin-top: 4px; }
-
-        /* ZArchiver Style Explorer */
-        .file-explorer { max-height: 150px; overflow-y: auto; background: #07080a; border: 1px solid var(--border-color); border-radius: 5px; padding: 6px; display: none; margin-top: 8px; }
-        .file-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid #1a1c23; font-size: 11px; cursor: pointer; border-radius: 3px; }
-        .file-item:hover { background: #1c1f2b; }
-
-        /* Danh sách danh mục Offset bấm để tải */
-        .result-list { max-height: 300px; overflow-y: auto; background: #07080a; border: 1px solid var(--border-color); border-radius: 5px; padding: 6px; margin-top: 8px; }
-        .offset-card { display: flex; justify-content: space-between; align-items: center; background: #111319; border: 1px solid #1f222e; padding: 8px 10px; margin-bottom: 6px; border-radius: 4px; font-size: 11px; transition: 0.2s; }
-        .offset-card:hover { border-color: var(--accent-color); background: #171a24; }
-        .offset-info { font-family: monospace; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px; }
-        .btn-download-single { background: #00bcd4; color: #fff; border: none; padding: 4px 8px; font-size: 10px; font-weight: bold; border-radius: 3px; cursor: pointer; white-space: nowrap; width: auto; }
-        .btn-download-single:hover { background: #00acc1; }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .btn-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        .aov-glow {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+        }
+        .aov-glow:hover {
+            box-shadow: 0 0 35px rgba(59, 130, 246, 0.7);
+        }
+        .ff-glow {
+            box-shadow: 0 0 25px rgba(249, 115, 22, 0.4);
+        }
+        .ff-glow:hover {
+            box-shadow: 0 0 35px rgba(249, 115, 22, 0.7);
+        }
     </style>
 </head>
-<body>
+<body class="text-white min-h-screen pb-12 flex flex-col items-center justify-center p-4">
 
-<div class="container">
-    <h1>🔥 đèo mẹ tool chếch offset game 🔥</h1>
+    <!-- Header Title -->
+    <header class="text-center my-8">
+        <h1 class="text-4xl md:text-6xl font-extrabold font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-amber-400 to-red-500 uppercase drop-shadow-lg">
+            GAME TOOL HUB
+        </h1>
+        <p class="text-gray-400 text-sm md:text-base mt-2 font-semibold">TỔNG HỢP TOOL & MOD SKIN LIÊN QUÂN - FREE FIRE</p>
+    </header>
 
-    <!-- 1. NẠP FILE -->
-    <div class="box">
-        <label>1. NẠP TỆP GAME (APK, LIBIL2CPP.SO, SCRIPT.JSON, DUMP.CS):</label>
-        <input type="file" id="fileInput" accept=".apk,.so,.dat,.json,.txt,.cs">
-        <button onclick="startProcessing()">NẠP VÀ PHÂN TÍCH TỆP</button>
+    <!-- Main Container -->
+    <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
 
-        <div id="progressSection" class="progress-section">
-            <div class="progress-bar-bg">
-                <div id="progressBarFill" class="progress-bar-fill"></div>
-                <div id="progressPercent" class="progress-percent">0%</div>
+        <!-- ================= LIÊN QUÂN MOBILE SECTION ================= -->
+        <div class="bg-gray-900/80 rounded-2xl border border-blue-500/30 p-5 backdrop-blur-md shadow-2xl flex flex-col">
+            <!-- Header Banner Button (Triệu Vân) -->
+            <div class="relative group rounded-xl overflow-hidden mb-6 border-2 border-blue-500/50 aov-glow cursor-pointer">
+                <img src="https://lienquan.garena.vn/wp-content/uploads/2024/06/trieu-van.jpg" alt="Triệu Vân Liên Quân" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-blue-950 via-blue-900/40 to-transparent flex flex-col justify-end p-4">
+                    <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full w-fit mb-1 font-orbitron">GARENA AOV</span>
+                    <h2 class="text-2xl font-black font-orbitron text-cyan-300 drop-shadow">LIÊN QUÂN MOBILE</h2>
+                </div>
             </div>
-            <div id="statusText" class="status-text">Đang chờ tệp...</div>
+
+            <p class="text-xs text-blue-400 font-bold mb-3 uppercase tracking-widest"><i class="fa-solid fa-download mr-1"></i> Danh sách Tool Liên Quân:</p>
+
+            <!-- App Links List -->
+            <div class="space-y-3 flex-1 flex flex-col justify-start">
+                <!-- App 1: Turbo Game Booster -->
+                <a href="https://play.google.com/store/apps/details?id=com.modaov.turbogamebooster" target="_blank" 
+                   class="btn-card flex items-center justify-between p-3.5 bg-gradient-to-r from-blue-900/60 to-indigo-900/60 border border-blue-500/40 rounded-xl hover:border-cyan-400">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-600/30 rounded-lg flex items-center justify-center text-cyan-400 font-bold border border-blue-400/30">
+                            <i class="fa-solid fa-gauge-high text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white text-sm font-orbitron">Turbo Game Booster</div>
+                            <div class="text-xs text-gray-400">Tăng tốc & Tối ưu AOV</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-cyan-400"></i>
+                </a>
+
+                <!-- App 2: Proz Mod Skin -->
+                <a href="https://play.google.com/store/apps/details?id=com.prozmodskin.app" target="_blank" 
+                   class="btn-card flex items-center justify-between p-3.5 bg-gradient-to-r from-blue-900/60 to-indigo-900/60 border border-blue-500/40 rounded-xl hover:border-cyan-400">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-indigo-600/30 rounded-lg flex items-center justify-center text-indigo-400 font-bold border border-indigo-400/30">
+                            <i class="fa-solid fa-shirt text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white text-sm font-orbitron">Proz Mod Skin</div>
+                            <div class="text-xs text-gray-400">Mod trang phục AOV Pro</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-cyan-400"></i>
+                </a>
+
+                <!-- App 3: ZMod Skin -->
+                <a href="https://play.google.com/store/apps/details?id=com.zmodskin.app" target="_blank" 
+                   class="btn-card flex items-center justify-between p-3.5 bg-gradient-to-r from-blue-900/60 to-indigo-900/60 border border-blue-500/40 rounded-xl hover:border-cyan-400">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-cyan-600/30 rounded-lg flex items-center justify-center text-cyan-300 font-bold border border-cyan-400/30">
+                            <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white text-sm font-orbitron">ZMod Skin App</div>
+                            <div class="text-xs text-gray-400">Mod trang phục full hiệu ứng</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-cyan-400"></i>
+                </a>
+
+                <!-- App 4: Nox Infinity Mod Skin -->
+                <a href="https://play.google.com/store/apps/details?id=com.noxinfinity.modskin" target="_blank" 
+                   class="btn-card flex items-center justify-between p-3.5 bg-gradient-to-r from-blue-900/60 to-indigo-900/60 border border-blue-500/40 rounded-xl hover:border-cyan-400">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-purple-600/30 rounded-lg flex items-center justify-center text-purple-400 font-bold border border-purple-400/30">
+                            <i class="fa-solid fa-bolt text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white text-sm font-orbitron">Nox Infinity Mod Skin</div>
+                            <div class="text-xs text-gray-400">Công cụ mod skin vip</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-cyan-400"></i>
+                </a>
+            </div>
         </div>
 
-        <div id="fileExplorer" class="file-explorer"></div>
-    </div>
+        <!-- ================= FREE FIRE SECTION ================= -->
+        <div class="bg-gray-900/80 rounded-2xl border border-orange-500/30 p-5 backdrop-blur-md shadow-2xl flex flex-col">
+            <!-- Header Banner Button (Free Fire Pinterest) -->
+            <div class="relative group rounded-xl overflow-hidden mb-6 border-2 border-orange-500/50 ff-glow cursor-pointer">
+                <img src="https://i.pinimg.com/736x/f8/90/9d/f8909da3ce0a66ccebbdfd03593bd5db.jpg" alt="Free Fire Logo" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-orange-950 via-orange-900/40 to-transparent flex flex-col justify-end p-4">
+                    <span class="bg-orange-600 text-white text-xs font-bold px-2.5 py-1 rounded-full w-fit mb-1 font-orbitron">GARENA FF</span>
+                    <h2 class="text-2xl font-black font-orbitron text-amber-300 drop-shadow">FREE FIRE</h2>
+                </div>
+            </div>
 
-    <!-- 2. TÌM KIẾM & TẢI TỆP CLICK -->
-    <div class="box">
-        <label>2. TÌM KIẾM & BẤM VÀO KẾT QUẢ ĐỂ TẢI:</label>
-        <input type="text" id="searchInput" oninput="filterData()" placeholder="Gõ từ khóa: Head, Recoil, Aim, Speed...">
-        <div id="countStats" class="status-text">Kết quả: 0</div>
-        
-        <div id="resultList" class="result-list">
-            <div style="color: #666; font-size: 11px; text-align: center; padding: 10px;">Chưa có dữ liệu. Vui lòng nạp tệp trước!</div>
+            <p class="text-xs text-orange-400 font-bold mb-3 uppercase tracking-widest"><i class="fa-solid fa-download mr-1"></i> Danh sách Tool Free Fire:</p>
+
+            <!-- App Links List -->
+            <div class="space-y-3 flex-1 flex flex-col justify-start">
+                <!-- App FF 1: Skin FF v5.6 APK (Mediafire) -->
+                <a href="https://www.mediafire.com/file/o576x5ubjdeb4yj/SkinFF-v5.6.apk/file" target="_blank" 
+                   class="btn-card flex items-center justify-between p-3.5 bg-gradient-to-r from-orange-950/70 to-red-950/70 border border-orange-500/50 rounded-xl hover:border-amber-400">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-orange-600/30 rounded-lg flex items-center justify-center text-orange-400 font-bold border border-orange-400/30">
+                            <i class="fa-solid fa-file-arrow-down text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white text-sm font-orbitron">Skin FF v5.6.apk</div>
+                            <div class="text-xs text-amber-400 font-semibold"><i class="fa-solid fa-cloud-arrow-down mr-1"></i> Tải trực tiếp (Mediafire)</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-download text-amber-400"></i>
+                </a>
+
+                <!-- App FF 2: Thanhdo V5.0.apk (Mediafire) -->
+                <a href="https://www.mediafire.com/file/ifgxdrws6i9vbsl/Thanhdo+V5.0.apk/file" target="_blank" 
+                   class="btn-card flex items-center justify-between p-3.5 bg-gradient-to-r from-orange-950/70 to-red-950/70 border border-orange-500/50 rounded-xl hover:border-amber-400">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-red-600/30 rounded-lg flex items-center justify-center text-red-400 font-bold border border-red-400/30">
+                            <i class="fa-solid fa-shield-halved text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white text-sm font-orbitron">Thanhdo V5.0.apk</div>
+                            <div class="text-xs text-amber-400 font-semibold"><i class="fa-solid fa-cloud-arrow-down mr-1"></i> Tải trực tiếp (Mediafire)</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-download text-amber-400"></i>
+                </a>
+            </div>
         </div>
+
     </div>
-</div>
 
-<script>
-    let rawOffsets = [];
-    let filteredOffsets = [];
-    let loadedZip = null;
+    <!-- Footer -->
+    <footer class="mt-12 text-center text-xs text-gray-500 font-semibold">
+        © 2026 Gaming Tool Hub - Web Tĩnh mod 
+    </footer>
 
-    function setProgress(percent, statusMsg) {
-        const pSection = document.getElementById('progressSection');
-        const pFill = document.getElementById('progressBarFill');
-        const pPercent = document.getElementById('progressPercent');
-        const sText = document.getElementById('statusText');
-
-        pSection.style.display = 'block';
-        pFill.style.width = percent + '%';
-        pPercent.innerText = percent + '%';
-        if (statusMsg) sText.innerText = statusMsg;
-    }
-
-    async function startProcessing() {
-        const fileInput = document.getElementById('fileInput');
-        const file = fileInput.files[0];
-        const explorer = document.getElementById('fileExplorer');
-
-        if (!file) {
-            alert("Ông chưa chọn tệp kìa!");
-            return;
-        }
-
-        rawOffsets = [];
-        filteredOffsets = [];
-        explorer.style.display = 'none';
-        explorer.innerHTML = '';
-        setProgress(5, `Tệp: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)...`);
-
-        if (file.name.endsWith('.apk')) {
-            try {
-                setProgress(15, "Phát hiện APK. Đang liệt kê file bên trong...");
-                const zip = new JSZip();
-                loadedZip = await zip.loadAsync(file, {
-                    onUpdate: (metadata) => {
-                        let p = Math.round(15 + (metadata.percent * 0.6));
-                        setProgress(p, `Đang xé APK: ${metadata.percent.toFixed(0)}%`);
-                    }
-                });
-
-                setProgress(80, "Hiển thị ZArchiver thu gọn...");
-                renderFileExplorer(loadedZip);
-
-                let priorityFile = loadedZip.file(/script\.json$/i)[0] || loadedZip.file(/dump\.cs$/i)[0] || loadedZip.file(/libil2cpp\.so$/i)[0];
-                if (priorityFile) {
-                    await loadZipFileContent(priorityFile.name);
-                } else {
-                    setProgress(100, "Chọn file từ danh sách bên trên để soi Offset!");
-                }
-
-            } catch (err) {
-                setProgress(100, "Lỗi!");
-                alert("Lỗi đọc APK: " + err.message);
-            }
-        } else {
-            const reader = new FileReader();
-            reader.onprogress = (e) => {
-                if (e.lengthComputable) {
-                    let p = Math.round((e.loaded / e.total) * 85);
-                    setProgress(p, "Đang nạp file...");
-                }
-            };
-            reader.onload = (e) => {
-                setProgress(90, "Đang xử lý dữ liệu...");
-                setTimeout(() => { parseOffsets(e.target.result); }, 50);
-            };
-            reader.readAsText(file);
-        }
-    }
-
-    function renderFileExplorer(zip) {
-        const explorer = document.getElementById('fileExplorer');
-        explorer.innerHTML = '';
-        explorer.style.display = 'block';
-
-        const fileList = [];
-        zip.forEach((relativePath, zipEntry) => {
-            if (!zipEntry.dir && (relativePath.includes('lib') || relativePath.includes('script') || relativePath.includes('dump') || relativePath.includes('assets'))) {
-                fileList.push(zipEntry);
-            }
-        });
-
-        fileList.slice(0, 15).forEach(zipEntry => {
-            const item = document.createElement('div');
-            item.className = 'file-item';
-            item.innerHTML = `
-                <span>📄 ${zipEntry.name}</span>
-                <span style="color:#666; font-size:10px;">${(zipEntry._data.uncompressedSize / 1024).toFixed(0)} KB</span>
-            `;
-
-            item.onclick = async () => {
-                await loadZipFileContent(zipEntry.name);
-            };
-
-            explorer.appendChild(item);
-        });
-    }
-
-    async function loadZipFileContent(fileName) {
-        setProgress(85, `Bóc tách file: ${fileName}...`);
-        try {
-            const fileText = await loadedZip.file(fileName).async("string");
-            parseOffsets(fileText);
-        } catch(e) {
-            setProgress(100, "Lỗi đọc tệp!");
-            alert("Tệp này là định dạng nhị phân, hãy chọn file script.json hoặc dump.cs!");
-        }
-    }
-
-    function parseOffsets(text) {
-        rawOffsets = [];
-        const lines = text.split('\n');
-        lines.forEach((line) => {
-            if (line.includes('0x') || line.includes('Offset') || line.includes('Get') || line.includes('Set')) {
-                if(line.trim().length > 0) rawOffsets.push(line.trim());
-            }
-        });
-
-        setProgress(100, `Thành công! Tìm thấy ${rawOffsets.length} Offset.`);
-        filteredOffsets = [...rawOffsets];
-        renderResults();
-    }
-
-    function renderResults() {
-        const resList = document.getElementById('resultList');
-        const countStats = document.getElementById('countStats');
-        
-        countStats.innerText = `Hiển thị: ${filteredOffsets.length} / ${rawOffsets.length} kết quả`;
-        resList.innerHTML = '';
-
-        if (filteredOffsets.length === 0) {
-            resList.innerHTML = `<div style="color: #666; font-size: 11px; text-align: center; padding: 10px;">Không tìm thấy kết quả phù hợp!</div>`;
-            return;
-        }
-
-        // Tối ưu danh sách hiển thị tối đa 100 dòng đầu để không đơ máy
-        filteredOffsets.slice(0, 100).forEach((item, index) => {
-            const card = document.createElement('div');
-            card.className = 'offset-card';
-            
-            // Cắt ngắn chuỗi hiển thị gọn gàng
-            let cleanText = item.length > 55 ? item.substring(0, 55) + '...' : item;
-
-            card.innerHTML = `
-                <div class="offset-info" title="${item}">${cleanText}</div>
-                <button class="btn-download-single" onclick="downloadSingleOffset('${encodeURIComponent(item)}')">Tải Tệp</button>
-            `;
-
-            resList.appendChild(card);
-        });
-    }
-
-    function filterData() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        filteredOffsets = query ? rawOffsets.filter(item => item.toLowerCase().includes(query)) : [...rawOffsets];
-        renderResults();
-    }
-
-    // TẢI DUY NHẤT 1 FILE OFFSET BẤM CHỌN
-    function downloadSingleOffset(encodedText) {
-        const text = decodeURIComponent(encodedText);
-        
-        // Tự bóc tách lấy tênOffset để đặt tên file cho gọn
-        let fileName = "Offset_Item.txt";
-        let match = text.match(/([a-zA-Z0-9_]+)\s*[:=]/) || text.match(/(0x[0-9a-fA-F]+)/);
-        if(match) {
-            fileName = `Offset_${match[1]}.txt`;
-        }
-
-        const blob = new Blob([text], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = fileName;
-        a.click();
-    }
-</script>
 </body>
 </html>
